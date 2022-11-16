@@ -72,6 +72,7 @@ IF OBJECT_ID(N'dbo.orders', N'U') IS NULL
         [customer_id] [int] NOT NULL FOREIGN KEY([customer_id]) REFERENCES [dbo].[customers] ([customer_id]),
         [order_date] [datetime] NOT NULL,
         [order_status] [varchar](30) NOT NULL,
+        [total_prime_cost] [decimal](8, 2) NULL,
         [total_cost] [decimal](8, 2) NULL
     );
 GO
@@ -81,9 +82,10 @@ IF OBJECT_ID(N'dbo.products', N'U') IS NULL
         [product_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
         [product_name] [varchar](30) NOT NULL UNIQUE CHECK(product_name !=''),
         [product_type] [varchar](30) NOT NULL,
-        [cost_price] [decimal](8, 2) NOT NULL,
-        [retail_price] as cost_price * 1.38,
-        [discount_price] [decimal](8, 2)
+        [upc_code] [varchar](12) NOT NULL UNIQUE,
+        [prime_price] [decimal](8, 2) NOT NULL,
+        [retail_price] as prime_price * 1.38,
+        [discount_price] [decimal](8, 2) NULL
     );
 GO
 
@@ -122,20 +124,43 @@ IF OBJECT_ID(N'dbo.order_details', N'U') IS NULL
     CREATE TABLE order_details (
         [order_id] [int] NOT NULL FOREIGN KEY([order_id]) REFERENCES [dbo].[orders] ([order_id]),
         [product_id] [int] NOT NULL FOREIGN KEY([product_id]) REFERENCES [dbo].[products] ([product_id]),
-        [amount] [int] NOT NULL
+        [amount] [int] NOT NULL,
+        [price] [decimal](8, 2) NULL,
+        [cost] as price * amount
     );
+GO
+
+CREATE TRIGGER Order_details_price_On_Insert_Order_details
+    ON order_details
+    AFTER INSERT AS
+        UPDATE order_details
+            set price = (select discount_price from products 
+                             where product_id = (select product_id from inserted))
+                where product_id = (select product_id from inserted)
+GO
+
+CREATE TRIGGER Orders_Total_prime_cost_On_Insert_Order_Details
+    ON order_details
+    AFTER INSERT AS
+        UPDATE orders
+        set total_prime_cost = (select sum(prime_price * order_details.amount) 
+                                    from inserted,
+                                         orders join order_details on orders.order_id = order_details.order_id
+                                         join products on order_details.product_id=products.product_id
+                                    where inserted.order_id = order_details.order_id)
+        where order_id = (select order_id from inserted)
 GO
 
 CREATE TRIGGER Orders_Total_cost_On_Insert_Order_Details
     ON order_details
     AFTER INSERT AS
         UPDATE orders
-        set total_cost = (select sum(discount_price * order_details.amount) 
-						      from inserted,
-								  orders join order_details on orders.order_id = order_details.order_id
-								  join products on order_details.product_id=products.product_id
-						      where inserted.order_id = order_details.order_id)
-                where order_id = (select order_id from inserted)
+        set total_cost = (select sum(order_details.cost) 
+                                from inserted,
+								    orders join order_details on orders.order_id = order_details.order_id
+								    join products on order_details.product_id=products.product_id
+						        where inserted.order_id = order_details.order_id)
+        where order_id = (select order_id from inserted)
 GO
 
 IF OBJECT_ID(N'dbo.stock', N'U') IS NULL 
@@ -150,7 +175,8 @@ GO
 create view ProductsStockView as
 	select product_name,
 		   product_type,
-		   cost_price,
+           upc_code,
+		   prime_price,
 		   retail_price,
 		   discount_price, 
 		   amount 
@@ -165,9 +191,9 @@ select orders.order_id,
 	   orders.order_status,
        products.product_id,
 	   product_name,
-	   discount_price,
-	   amount,
-	   total_cost
+       amount,
+	   price,
+	   cost
 		from orders 
 			join order_details on orders.order_id=order_details.order_id 
 			join products on order_details.product_id=products.product_id

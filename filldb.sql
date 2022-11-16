@@ -18,19 +18,19 @@ VALUES
     (4, 'v.pupkin@brewery.com', 'Василий', 'Пупкин'),--1
     (5, 'n.pechkin@brewery.com', 'Николай', 'Печкин')--2
 
-INSERT INTO products(product_name, product_type, cost_price) VALUES ('Балтика 7', 'Пиво', 67)--1
+INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Балтика 7', 'Пиво', '123456789121', 67)--1
 GO
 
-INSERT INTO products(product_name, product_type, cost_price) VALUES ('Балтика 8', 'Пиво', 68)--2
+INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Балтика 8', 'Пиво', '123456789122', 68)--2
 GO
 
-INSERT INTO products(product_name, product_type, cost_price) VALUES ('Балтика 9', 'Пиво', 69)--3
+INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Балтика 9', 'Пиво', '123456789123', 69)--3
 GO
 
-INSERT INTO products(product_name, product_type, cost_price) VALUES ('Strongbow яблоко', 'Сидр', 57)--4
+INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Strongbow яблоко', 'Сидр', '123456789124', 57)--4
 GO
 
-INSERT INTO products(product_name, product_type, cost_price) VALUES ('Strongbow груша', 'Сидр', 58)--5
+INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Strongbow груша', 'Сидр', '123456789125', 58)--5
 GO
 
 INSERT INTO stock(product_id, amount)
