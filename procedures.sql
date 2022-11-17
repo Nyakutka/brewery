@@ -271,3 +271,10 @@ as
 		set order_status = @order_status
 	where order_id=@order_id
 go
+
+create procedure DeleteWorker
+	@worker_id int
+as
+	DELETE from users
+		where user_id=@worker_id
+go

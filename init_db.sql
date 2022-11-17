@@ -44,7 +44,7 @@ GO
 
 IF OBJECT_ID(N'dbo.workers', N'U') IS NULL 
     CREATE TABLE workers (
-        [user_id] [int] NOT NULL FOREIGN KEY([user_id]) REFERENCES [dbo].[users] ([user_id]),
+        [user_id] [int] NOT NULL FOREIGN KEY([user_id]) REFERENCES [dbo].[users] ([user_id]) on delete cascade,
         [worker_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
         [email] [varchar](30) NOT NULL UNIQUE 
             CONSTRAINT CK_WORKER_EMAIL CHECK(dbo.isValidEmail(email) = 1),
