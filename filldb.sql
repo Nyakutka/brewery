@@ -33,13 +33,30 @@ GO
 INSERT INTO products(product_name, product_type, upc_code, prime_price) VALUES ('Strongbow груша', 'Сидр', '123456789125', 58)--5
 GO
 
-INSERT INTO stock(product_id, amount)
-VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4),
-    (5, 5)
+UPDATE stock
+    set amount = 1
+    where product_id=1
+go
+
+UPDATE stock
+    set amount = 2
+    where product_id=2
+go
+
+UPDATE stock
+    set amount = 3
+    where product_id=3
+go
+
+UPDATE stock
+    set amount = 4
+    where product_id=4
+go
+
+UPDATE stock
+    set amount = 5
+    where product_id=5
+go
 
 INSERT INTO discounts(product_id, discount) VALUES (1, 0.1)
 GO

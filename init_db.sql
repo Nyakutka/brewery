@@ -92,9 +92,13 @@ GO
 CREATE TRIGGER Products_Discount_Price_On_Insert_Products
     ON products
     AFTER INSERT AS
+    BEGIN
         UPDATE products
             set discount_price = retail_price
-                where product_id = (select product_id from inserted)
+                where product_id = (select product_id from inserted);
+        INSERT INTO stock (product_id, amount)
+            VALUES((select product_id from inserted), 0)
+    END
 GO
 
 IF OBJECT_ID(N'dbo.discounts', N'U') IS NULL 
