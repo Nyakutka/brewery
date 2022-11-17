@@ -70,7 +70,7 @@ go
 create procedure ShowOrderDetails
 @order_id int
 as
-select *
+select product_name, amount, price, cost
 	from OrdersOrderDetailsCustomersView
 	where order_id = @order_id
 GO
@@ -151,3 +151,123 @@ as
 INSERT INTO products(product_name, product_type, upc_code, prime_price) 
 	VALUES (@product_name, @product_type, @upc_code, @prime_price)
 GO
+
+---
+create procedure InsertWorker
+	@email varchar(30),
+	@first_name varchar(30),
+	@second_name varchar(30),
+	@user_password varchar(30)
+as
+BEGIN
+	INSERT INTO users(username, user_password, user_role) 
+		VALUES (left(@email, charindex('@', @email) - 1), HASHBYTES('SHA2_256', @user_password), 'worker');
+	INSERT INTO workers(user_id, email, first_name, second_name)
+		VALUES (
+			(select user_id from users
+				where username=left(@email,  charindex('@', @email) - 1)),
+			@email,
+			@first_name,
+			@second_name
+		)
+END
+GO
+
+create procedure InsertCustomer
+	@customer_name varchar(30),
+	@email varchar(30),
+	@phone_number varchar(30),
+	@address varchar(30),
+	@user_password varchar(30)
+as
+BEGIN
+	INSERT INTO users(username,
+			user_password,
+			user_role) 
+		VALUES (left(@email, charindex('@', @email) - 1),
+				HASHBYTES('SHA2_256', @user_password), 
+				'customer');
+	INSERT INTO customers(user_id, 
+			email,
+			customer_name, 
+			phone_number,
+			address)
+		VALUES ((select user_id from users
+				where username=left(@email,  charindex('@', @email) - 1)),
+			@email,
+			@customer_name,
+			@phone_number,
+			@address
+		)
+END
+GO
+
+create procedure InsertOrder
+	@customer_id INT,
+	@order_date DATETIME
+as
+	INSERT INTO orders(customer_id, order_date) 
+		VALUES (@customer_id, @order_date)
+go
+
+create procedure InsertOrder_details
+	@order_id INT,
+	@product_id INT,
+	@amount INT
+as
+	INSERT INTO order_details(order_id, product_id, amount) 
+		VALUES (@order_id, @product_id, @amount)
+GO
+
+create procedure UpdateProduct
+	@product_id int,
+	@product_name varchar(30),
+	@product_type varchar(30),
+	@upc_code varchar(30),
+	@prime_price varchar(30)
+as
+	UPDATE products
+		set product_name = @product_name,
+			product_type = @product_type,
+			upc_code = @upc_code,
+			prime_price = @prime_price
+	where product_id=@product_id
+GO
+
+create procedure UpdateDiscount
+	@product_id int,
+	@discount decimal(3, 2)
+as
+	UPDATE discounts
+		set discount = @discount
+	where product_id=@product_id
+go
+
+create procedure UpdateAmountOnStock
+	@product_id int,
+	@amount int
+as
+	UPDATE stock
+		set amount = @amount
+	where product_id=@product_id
+go
+
+create procedure UpdateCustomer
+	@customer_id int,
+	@phone_number varchar(30),
+	@address varchar(30)
+as
+	UPDATE customers
+		set phone_number = @phone_number,
+			address = @address
+	where customer_id=@customer_id
+go
+
+create procedure UpdateOrderStatus
+	@order_id int,
+	@order_status varchar(30)
+as
+	UPDATE orders
+		set order_status = @order_status
+	where order_id=@order_id
+go

@@ -37,7 +37,7 @@ IF OBJECT_ID(N'dbo.users', N'U') IS NULL
     CREATE TABLE users (
         [user_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
         [username] [varchar](30) NOT NULL UNIQUE CHECK(username !=''),
-        [user_password] [varchar](30) NOT NULL CHECK(user_password !=''),
+        [user_password] varbinary(256) NOT NULL,
         [user_role] [varchar](10) NOT NULL
     );
 GO
@@ -57,9 +57,9 @@ IF OBJECT_ID(N'dbo.customers', N'U') IS NULL
     CREATE TABLE customers (
         [user_id] [int] NOT NULL FOREIGN KEY([user_id]) REFERENCES [dbo].[users] ([user_id]),
         [customer_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [customer_name] [varchar](30) NOT NULL CHECK(customer_name !=''),
         [email] [varchar](30) NOT NULL UNIQUE
             CONSTRAINT CK_CUSTOMER_EMAIL CHECK(dbo.isValidEmail(email) = 1),
+        [customer_name] [varchar](30) NOT NULL CHECK(customer_name !=''),
         [phone_number] [varchar](30) NOT NULL UNIQUE
             CONSTRAINT CK_CUSTOMER_PHONE_NUMBER CHECK(dbo.isValidPhoneNumber(phone_number) = 1),
         [address] [varchar](30) NOT NULL CHECK(address !='')
@@ -71,7 +71,7 @@ IF OBJECT_ID(N'dbo.orders', N'U') IS NULL
         [order_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
         [customer_id] [int] NOT NULL FOREIGN KEY([customer_id]) REFERENCES [dbo].[customers] ([customer_id]),
         [order_date] [datetime] NOT NULL,
-        [order_status] [varchar](30) NOT NULL,
+        [order_status] [varchar](30) DEFAULT 'pending',
         [total_prime_cost] [decimal](8, 2) NULL,
         [total_cost] [decimal](8, 2) NULL
     );
@@ -89,7 +89,7 @@ IF OBJECT_ID(N'dbo.products', N'U') IS NULL
     );
 GO
 
-CREATE TRIGGER Products_Discount_Price_On_Insert_Products
+CREATE TRIGGER Products_Discount_Price_andAmount_On_Stock_On_Insert_Products
     ON products
     AFTER INSERT AS
     BEGIN
@@ -97,6 +97,8 @@ CREATE TRIGGER Products_Discount_Price_On_Insert_Products
             set discount_price = retail_price
                 where product_id = (select product_id from inserted);
         INSERT INTO stock (product_id, amount)
+            VALUES((select product_id from inserted), 0);
+        INSERT INTO discounts (product_id, discount)
             VALUES((select product_id from inserted), 0)
     END
 GO
