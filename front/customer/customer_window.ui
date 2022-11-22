@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CustomerForm</class>
+ <widget class="QWidget" name="CustomerForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="customer_tab_widget">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>29</y>
+     <width>1201</width>
+     <height>771</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="catalog_tab">
+    <attribute name="title">
+     <string>Catalog</string>
+    </attribute>
+    <widget class="QTableView" name="catalog_table_view">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>800</width>
+       <height>600</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="orders_tab">
+    <attribute name="title">
+     <string>My orders</string>
+    </attribute>
+    <widget class="QTableView" name="order_table_view">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>800</width>
+       <height>600</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="status_filter_comboBox">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>40</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="status_filter_label">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>20</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Filter by status:</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
