@@ -36,8 +36,9 @@ GO
 IF OBJECT_ID(N'dbo.users', N'U') IS NULL 
     CREATE TABLE users (
         [user_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [username] [varchar](30) NOT NULL UNIQUE CHECK(username !=''),
-        [user_password] varbinary(256) NOT NULL,
+        [username] [varchar](30) NOT NULL CHECK(username !=''),
+        [user_password] varbinary(256) NOT NULL 
+            CONSTRAINT CK_USER_PASSWORD CHECK(user_password !=''),
         [user_role] [varchar](10) NOT NULL
     );
 GO
@@ -46,8 +47,9 @@ IF OBJECT_ID(N'dbo.workers', N'U') IS NULL
     CREATE TABLE workers (
         [user_id] [int] NOT NULL FOREIGN KEY([user_id]) REFERENCES [dbo].[users] ([user_id]) on delete cascade,
         [worker_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [email] [varchar](30) NOT NULL UNIQUE 
-            CONSTRAINT CK_WORKER_EMAIL CHECK(dbo.isValidEmail(email) = 1),
+        [email] [varchar](30) NOT NULL
+            CONSTRAINT CK_WORKER_EMAIL CHECK(dbo.isValidEmail(email) = 1)
+            CONSTRAINT UQ_WORKER_EMAIL UNIQUE,
         [first_name] [varchar](30) NOT NULL CHECK(first_name !=''),
         [second_name] [varchar](30) NOT NULL CHECK(second_name !='')
     );
@@ -57,11 +59,13 @@ IF OBJECT_ID(N'dbo.customers', N'U') IS NULL
     CREATE TABLE customers (
         [user_id] [int] NOT NULL FOREIGN KEY([user_id]) REFERENCES [dbo].[users] ([user_id]),
         [customer_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [email] [varchar](30) NOT NULL UNIQUE
-            CONSTRAINT CK_CUSTOMER_EMAIL CHECK(dbo.isValidEmail(email) = 1),
+        [email] [varchar](30) NOT NULL
+            CONSTRAINT CK_CUSTOMER_EMAIL CHECK(dbo.isValidEmail(email) = 1)
+            CONSTRAINT UQ_CUSTOMER_EMAIL UNIQUE,
         [customer_name] [varchar](30) NOT NULL CHECK(customer_name !=''),
-        [phone_number] [varchar](30) NOT NULL UNIQUE
-            CONSTRAINT CK_CUSTOMER_PHONE_NUMBER CHECK(dbo.isValidPhoneNumber(phone_number) = 1),
+        [phone_number] [varchar](30) NOT NULL
+            CONSTRAINT CK_CUSTOMER_PHONE_NUMBER CHECK(dbo.isValidPhoneNumber(phone_number) = 1)
+            CONSTRAINT UQ_CUSTOMER_PHONE_NUMBER UNIQUE,
         [address] [varchar](30) NOT NULL CHECK(address !='')
     );
 GO
@@ -80,9 +84,11 @@ GO
 IF OBJECT_ID(N'dbo.products', N'U') IS NULL 
     CREATE TABLE products (
         [product_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [product_name] [varchar](30) NOT NULL UNIQUE CHECK(product_name !=''),
+        [product_name] [varchar](30) NOT NULL CHECK(product_name !='')
+            CONSTRAINT UQ_PRODUCT_NAME UNIQUE,
         [product_type] [varchar](30) NOT NULL,
-        [upc_code] [varchar](12) NOT NULL UNIQUE,
+        [upc_code] [varchar](12) NOT NULL
+            CONSTRAINT UQ_PRODUCT_UPC UNIQUE,
         [prime_price] [decimal](8, 2) NOT NULL,
         [retail_price] as prime_price * 1.38,
         [discount_price] [decimal](8, 2) NULL

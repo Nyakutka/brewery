@@ -1,45 +1,17 @@
 from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6.QtWidgets import QTableView, QApplication
+from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
+from datetime import datetime
 import sys
+sys.path.append('D:/учеба/brewery/db_connection')
+sys.path.append('D:/учеба/brewery/front/authorisation')
+from authorisation_window import AuthorisationWindow
+            
+app = QtWidgets.QApplication(sys.argv)
 
-SERVER_NAME = 'localhost'
-DATABASE_NAME = 'brewery'
-USERNAME = ''
-PASSWORD = ''
-
-def createConnection():
-	connString = f'DRIVER={{SQL Server}};'\
-					f'SERVER={SERVER_NAME};'\
-					f'DATABASE={DATABASE_NAME}'
-	global db
-	db = QSqlDatabase.addDatabase('QODBC')
-	db.setDatabaseName(connString)
-	if db.open():
-		print('connected to SQL Server successfully')
-		return True
-	else:
-		print('connected to SQL Server failed')
-		return False
-
-def displayData(sqlStatement):
-	print('processing querry')
-	qry = QSqlQuery(db)
-	qry.prepare(sqlStatement)
-	qry.exec()
-
-	model = QSqlQueryModel()
-	model.setQuery(qry)
-	view = QTableView()
-	view.setModel(model)
-	return view
-
-if __name__=='__main__':
-	app = QApplication(sys.argv)
-
-	if createConnection():
-		SQL_STATEMENT = 'exec ShowProductsBase'
-		dataView = displayData(SQL_STATEMENT)
-		dataView.show()
-	
-
-	app.exit(app.exec())
+widget = QtWidgets.QStackedWidget()
+widget.setFixedWidth(500)
+widget.setFixedHeight(450)
+window = AuthorisationWindow(app_widget=widget)
+widget.addWidget(window)
+widget.show()
+app.exec()

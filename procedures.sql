@@ -181,24 +181,28 @@ create procedure InsertCustomer
 	@user_password varchar(30)
 as
 BEGIN
-	INSERT INTO users(username,
-			user_password,
-			user_role) 
-		VALUES (left(@email, charindex('@', @email) - 1),
-				HASHBYTES('SHA2_256', @user_password), 
-				'customer');
-	INSERT INTO customers(user_id, 
-			email,
-			customer_name, 
-			phone_number,
-			address)
-		VALUES ((select user_id from users
-				where username=left(@email,  charindex('@', @email) - 1)),
-			@email,
-			@customer_name,
-			@phone_number,
-			@address
-		)
+	BEGIN TRANSACTION
+		INSERT INTO users(username,
+				user_password,
+				user_role) 
+			VALUES (left(@email, charindex('@', @email) - 1),
+					HASHBYTES('SHA2_256', @user_password), 
+					'customer')
+		INSERT INTO customers(user_id, 
+				email,
+				customer_name, 
+				phone_number,
+				address)
+			VALUES ((select user_id from users
+					where username=left(@email,  charindex('@', @email) - 1)),
+				@email,
+				@customer_name,
+				@phone_number,
+				@address
+			)
+		IF (@@error <> 0)
+        	ROLLBACK
+	COMMIT
 END
 GO
 
