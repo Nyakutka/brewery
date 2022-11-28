@@ -3,16 +3,18 @@ from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
 from ui_registration_window import Ui_RegistrationWindow
 from datetime import datetime
 import sys
-sys.path.append('D:/учеба/brewery/db_connection')
+# sys.path.append('D:/учеба/brewery/db_connection')
+sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
 from db_connection import DataBaseConnection
 
 class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
-    def __init__(self, app_widget, *args, **kwargs):
+    def __init__(self, app_widget, db, *args, **kwargs):
         super(RegistrationWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.app_widget = app_widget
         self.app_widget.setFixedWidth(550)
         self.app_widget.setFixedHeight(450)
+        self.db = db
         self.invalid_company_name_label.hide()
         self.invalid_email_label.hide()
         self.invalid_phone_number_label.hide()

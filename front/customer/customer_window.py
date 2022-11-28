@@ -3,30 +3,27 @@ from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
 from ui_customer_window import Ui_CustomerForm
 from datetime import datetime
 import sys
-sys.path.append('D:/учеба/brewery/db_connection')
-sys.path.append('D:/учеба/brewery/front/authorisation')
+# sys.path.append('D:/учеба/brewery/db_connection')
+# sys.path.append('D:/учеба/brewery/front/authorisation')
+sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
+sys.path.append('D:/учеба/бд/курсач/brewery/front/authorisation')
 from db_connection import DataBaseConnection
 
 class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
-    def __init__(self, app_widget, customer_id: int, customer_username: str, *args, **kwargs):
+    def __init__(self, app_widget, db, customer_id: int, customer_username: str, *args, **kwargs):
         super(CustomerWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.app_widget = app_widget
+        self.db = db
         self.username = customer_username
         self.signed_label.setText(f"You are signed in as customer: {customer_username}")
-        self.status_filter_comboBox.addItems(['all', 'pending', 'processing', 'cancelled'])
-        self.db = DataBaseConnection().database
         self.customer_id = customer_id
         self.initTab()
         self.customer_tab_widget.currentChanged.connect(self.initTab)
-        self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
-        self.hide_details_button.clicked.connect(self.__initOrdersTab)
-        self.new_order_button.clicked.connect(self.__initCatalogTab_new_order_mode)
-        self.submit_new_order_button.clicked.connect(self.__submit_order)
         self.cancel_new_order_button.clicked.connect(self.__cancel_new_order_mode)
+
         self.sign_out_button.clicked.connect(self.__sign_out)
-        self.change_telephone_number_button.clicked.connect(self.__change_phone_number)
-        self.change_address_button.clicked.connect(self.__change_address)
+
         
     def __cancel_new_order_mode(self):
         qm = QtWidgets.QMessageBox()
@@ -45,6 +42,7 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
             self.app_widget.setCurrentIndex(0)
 
     def handle_show_details_button_clicked(self):
+        self.hide_details_button.clicked.connect(self.__initOrdersTab)
         self.order_number_label.show()
         self.details_table_widget.show()
         self.hide_details_button.show()
@@ -62,9 +60,11 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
 
     def __initCatalogTab(self):
         self.new_order_button.setEnabled(True)
+        self.new_order_button.clicked.connect(self.__initCatalogTab_new_order_mode)
         self.submit_new_order_button.hide()
         self.new_order_table_widget.hide()
         self.cancel_new_order_button.hide()
+        
         self.total_cost_label.hide()
         self.total_cost_label_value.setText('0')
         self.total_cost_label_value.hide()
@@ -85,6 +85,8 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
     def __initCatalogTab_new_order_mode(self):
         self.new_order_button.setEnabled(False)
         self.new_order_table_widget.show()
+        self.submit_new_order_button.clicked.connect(self.__submit_order)
+        
         if self.new_order_table_widget.rowCount() > 0:
             self.submit_new_order_button.show()
         else:
@@ -174,6 +176,10 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
             self.__initCatalogTab()
 
     def __initOrdersTab(self):
+        if self.status_filter_comboBox.count() == 0:
+            self.status_filter_comboBox.addItems(['all', 'pending', 'processing', 'cancelled'])
+        self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
+        
         self.order_number_label.hide()
         self.details_table_widget.hide()
         self.hide_details_button.hide()
