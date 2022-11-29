@@ -21,7 +21,8 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
         self.invalid_address_label.hide()
         self.invalid_password_label.hide()
         self.passwords_match_label.hide()
-        self.registration_label.hide()
+        self.registration_successful_label.hide()
+
         self.register_button.clicked.connect(self.__register)
         self.authorisation_button.clicked.connect(self.__back_to_authorisation)
 
@@ -43,6 +44,7 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
         address = self.address_line.text()
         password = self.password_line.text()
         confirmed_password = self.confirm_password_line.text()
+        username = self.email_line.text().split('@')[0]
         print('--', company_name, email, phone_number, address, password, confirmed_password)
         query = QSqlQuery()
         query.exec(f'exec InsertCustomer {company_name}, "{email}", "{phone_number}", "{address}", "{password}"')
@@ -54,7 +56,8 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             self.password_line.setReadOnly(True)
             self.confirm_password_line.setReadOnly(True)
             self.register_button.setEnabled(False)
-            self.registration_label.show()
+            self.registration_successful_label.setText(f'Registration successful, your username is: {username}')
+            self.registration_successful_label.show()
         else:
             print(query.lastError().text())
             if company_name == '':

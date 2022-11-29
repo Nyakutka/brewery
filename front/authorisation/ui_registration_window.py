@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\учеба\brewery\front\authorisation\registration_window.ui'
+# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\authorisation\registration_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -85,6 +85,7 @@ class Ui_RegistrationWindow(object):
         self.authorisation_button.setObjectName("authorisation_button")
         self.registration_successful_label = QtWidgets.QLabel(self.centralwidget)
         self.registration_successful_label.setGeometry(QtCore.QRect(240, 360, 281, 16))
+        self.registration_successful_label.setStyleSheet("color: rgb(0, 255, 0);")
         self.registration_successful_label.setObjectName("registration_successful_label")
         self.invalid_company_name_label = QtWidgets.QLabel(self.centralwidget)
         self.invalid_company_name_label.setGeometry(QtCore.QRect(320, 60, 161, 16))

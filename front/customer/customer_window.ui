@@ -229,7 +229,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Type</string>
+       <string>Status</string>
       </property>
      </column>
      <column>
@@ -511,7 +511,7 @@
   <widget class="QLabel" name="signed_label">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>620</x>
      <y>10</y>
      <width>261</width>
      <height>20</height>
@@ -524,7 +524,7 @@
   <widget class="QPushButton" name="sign_out_button">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>880</x>
      <y>10</y>
      <width>91</width>
      <height>31</height>

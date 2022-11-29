@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\учеба\brewery\front\customer\customer_window.ui'
+# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\customer\customer_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -169,10 +169,10 @@ class Ui_CustomerForm(object):
         self.invalid_address_label.setObjectName("invalid_address_label")
         self.customer_tab_widget.addTab(self.account_tab, "")
         self.signed_label = QtWidgets.QLabel(CustomerForm)
-        self.signed_label.setGeometry(QtCore.QRect(560, 10, 261, 20))
+        self.signed_label.setGeometry(QtCore.QRect(620, 10, 261, 20))
         self.signed_label.setObjectName("signed_label")
         self.sign_out_button = QtWidgets.QPushButton(CustomerForm)
-        self.sign_out_button.setGeometry(QtCore.QRect(820, 10, 91, 31))
+        self.sign_out_button.setGeometry(QtCore.QRect(880, 10, 91, 31))
         self.sign_out_button.setObjectName("sign_out_button")
 
         self.retranslateUi(CustomerForm)
@@ -210,7 +210,7 @@ class Ui_CustomerForm(object):
         item = self.orders_table_widget.horizontalHeaderItem(1)
         item.setText(_translate("CustomerForm", "Date"))
         item = self.orders_table_widget.horizontalHeaderItem(2)
-        item.setText(_translate("CustomerForm", "Type"))
+        item.setText(_translate("CustomerForm", "Status"))
         item = self.orders_table_widget.horizontalHeaderItem(3)
         item.setText(_translate("CustomerForm", "Cost"))
         item = self.details_table_widget.horizontalHeaderItem(0)

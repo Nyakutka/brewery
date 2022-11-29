@@ -8,8 +8,10 @@ import sys
 # sys.path.append('D:/учеба/brewery/front/customer')
 sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
 sys.path.append('D:/учеба/бд/курсач/brewery/front/customer')
+sys.path.append('D:/учеба/бд/курсач/brewery/front/worker')
 from db_connection import DataBaseConnection
 from customer_window import CustomerWindow
+from worker_window import WorkerWindow
 
 class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
     def __init__(self, app_widget, *args, **kwargs):
@@ -40,6 +42,15 @@ class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
                 self.username_line_edit.setText('')
                 self.password_line_edit.setText('')
                 self.app_widget.setFixedWidth(1000)
+                self.app_widget.setFixedHeight(650)
+                self.app_widget.addWidget(window)
+                self.app_widget.setCurrentIndex(self.app_widget.count() - 1)
+            elif self.role == 'worker':
+                self.invalid_auth_label.hide()
+                window = WorkerWindow(app_widget=self.app_widget, db=self.db, worker_id=self.user_id, worker_username=username)
+                self.username_line_edit.setText('')
+                self.password_line_edit.setText('')
+                self.app_widget.setFixedWidth(1200)
                 self.app_widget.setFixedHeight(650)
                 self.app_widget.addWidget(window)
                 self.app_widget.setCurrentIndex(self.app_widget.count() - 1)

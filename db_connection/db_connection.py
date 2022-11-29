@@ -1,7 +1,7 @@
 from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
 
 SERVER = 'localhost'
-SERVER = 'NYAKUTKA'
+# SERVER = 'NYAKUTKA'
 
 class DataBaseConnection():
     def __init__(self, 

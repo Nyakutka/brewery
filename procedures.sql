@@ -1,21 +1,28 @@
 use brewery
 go
 --PROCEDURES
-create procedure ShowProductsBase 
-as
-select * from ProductsStockView
-go
---
-create procedure ShowProductsCatalog 
+create or alter procedure ShowProductsBase 
 as
 select product_name,
-	   product_type,
-	   retail_price, 
-	   discount_price 
+		product_type,
+		upc_code,
+		prime_price,
+		retail_price,
+		discount_price, 
+		amount
 from ProductsStockView
 go
 --
-create procedure ShowLackProducts
+create or alter procedure ShowProductsCatalog 
+as
+select product_name,
+	    product_type,
+	    retail_price, 
+	    discount_price 
+from ProductsStockView
+go
+--
+create or alter procedure ShowLackProducts
 as
 select product_name, 
 	   abs(amount_on_stock - ordered) as lack_on_stock 
@@ -30,76 +37,8 @@ from (select product_name,
 as a
 where (amount_on_stock - ordered) < 0
 go
---
-create procedure ShowAllOrders
-as
-select order_id, 
-	   customer_name, 
-	   order_date,
-	   order_status,
-	   total_prime_cost,
-	   total_cost 
-from Orders 
-	join customers 
-		on orders.customer_id=customers.customer_id
-go
---
-create procedure ShowOrdersByCustomer_id
-	@customer_id int
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost 
-from Orders
-where customer_id = @customer_id
-go
---
-create procedure ShowOrdersByCustomer_idAndOrder_status
-	@customer_id int,
-	@order_status varchar(30)
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost
-from Orders
-where customer_id = @customer_id and order_status = @order_status
-go
 ---
-create procedure ShowOrderDetails
-@order_id int
-as
-select product_name, amount, price, cost
-	from OrdersOrderDetailsCustomersView
-	where order_id = @order_id
-GO
----
-create procedure ShowCustomers
-as
-select customer_name,
-	email,
-	phone_number,
-	address
-from customers
-go
----
-create procedure ShowAllIncome
-as
-select sum(total_cost - total_prime_cost) as income 
-	from Orders
-where order_status='completed'
-go
----
-create procedure ShowIncomeByCustomer_id
-	@customer_id int
-as
-select sum(total_cost - total_prime_cost) as income 
-	from Orders
-where order_status='completed' and customer_id=@customer_id
-go
----
-create procedure ShowLackProductsByOrder_id
+create or alter procedure ShowLackProductsByOrder_id
 	@order_id int
 as
 select product_name, 
@@ -116,7 +55,7 @@ as a
 where (amount_on_stock - ordered) < 0
 go
 ---
-create procedure ShowLackProductsByCustomer_name
+create or alter procedure ShowLackProductsByCustomer_name
 	@customer_name varchar(30)
 as
 select product_name, 
@@ -131,8 +70,128 @@ from
 as a
 where (amount_on_stock - ordered) < 0
 go
+--
+create or alter procedure ShowAllOrders
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders 
+	join customers 
+		on orders.customer_id=customers.customer_id
+go
+--
+create or alter procedure ShowOrdersByCustomer_name_ForWorker
+	@customer_name varchar(30)
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where customer_name = @customer_name
+go
+--
+create or alter procedure ShowOrdersByOrder_status_ForWorker
+	@order_status varchar(30)
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where order_status = @order_status
+go
+--
+create or alter procedure ShowOrdersByCustomer_nameAndOrder_status_ForWorker
+	@customer_name varchar(30),
+	@order_status varchar(30)
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where customer_name = @customer_name and order_status = @order_status
+go
+--
+create or alter procedure ShowOrdersByCustomer_id_ForCustomer
+	@customer_id int
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost 
+from Orders
+where customer_id = @customer_id
+go
+--
+create or alter procedure ShowOrdersByCustomer_idAndOrder_status_ForCustomer
+	@customer_id int,
+	@order_status varchar(30)
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and order_status = @order_status
+go
 ---
-create procedure ShowWorkers
+create or alter procedure ShowOrderDetails
+@order_id int
+as
+select product_name, amount, price, cost
+	from OrdersOrderDetailsCustomersView
+	where order_id = @order_id
+GO
+---
+create or alter procedure ShowCustomers
+as
+select customer_name,
+	email,
+	phone_number,
+	address
+from customers
+go
+---
+create or alter procedure ShowAllIncome
+as
+select sum(total_cost - total_prime_cost) as income 
+	from Orders
+where order_status='completed'
+go
+---
+create or alter procedure ShowIncomeByCustomer_name
+	@customer_name varchar(30)
+as
+select sum(total_cost - total_prime_cost) as income 
+	from Orders
+		join customers 
+			on orders.customer_id=customers.customer_id
+where order_status='completed' and customer_name=@customer_name
+go
+---
+
+---
+
+---
+create or alter procedure ShowWorkers
 as
 select email, 
 	username, 
@@ -142,7 +201,8 @@ from workers
 	join users on workers.user_id=users.user_id
 go
 ---
-create procedure InsertProduct
+--INSERT--
+create or alter procedure InsertProduct
 	@product_name varchar(30),
 	@product_type varchar(30),
 	@upc_code varchar(12),
@@ -153,7 +213,7 @@ INSERT INTO products(product_name, product_type, upc_code, prime_price)
 GO
 
 ---
-create procedure InsertWorker
+create or alter procedure InsertWorker
 	@email varchar(30),
 	@first_name varchar(30),
 	@second_name varchar(30),
@@ -173,7 +233,7 @@ BEGIN
 END
 GO
 
-create procedure InsertCustomer
+create or alter procedure InsertCustomer
 	@customer_name varchar(30),
 	@email varchar(30),
 	@phone_number varchar(30),
@@ -206,7 +266,7 @@ BEGIN
 END
 GO
 
-create procedure InsertOrder
+create or alter procedure InsertOrder
 	@customer_id INT,
 	@order_date DATETIME
 as
@@ -214,7 +274,7 @@ as
 		VALUES (@customer_id, @order_date)
 go
 
-create procedure InsertOrder_details
+create or alter procedure InsertOrder_details
 	@order_id INT,
 	@product_id INT,
 	@amount INT
@@ -222,8 +282,8 @@ as
 	INSERT INTO order_details(order_id, product_id, amount) 
 		VALUES (@order_id, @product_id, @amount)
 GO
-
-create procedure UpdateProduct
+--UPDATE--
+create or alter procedure UpdateProduct
 	@product_id int,
 	@product_name varchar(30),
 	@product_type varchar(30),
@@ -238,7 +298,7 @@ as
 	where product_id=@product_id
 GO
 
-create procedure UpdateDiscount
+create or alter procedure UpdateDiscount
 	@product_id int,
 	@discount decimal(3, 2)
 as
@@ -247,7 +307,7 @@ as
 	where product_id=@product_id
 go
 
-create procedure UpdateAmountOnStock
+create or alter procedure UpdateAmountOnStock
 	@product_id int,
 	@amount int
 as
@@ -256,7 +316,7 @@ as
 	where product_id=@product_id
 go
 
-create procedure UpdateCustomer
+create or alter procedure UpdateCustomer
 	@customer_id int,
 	@phone_number varchar(30),
 	@address varchar(30)
@@ -267,7 +327,7 @@ as
 	where customer_id=@customer_id
 go
 
-create procedure UpdateOrderStatus
+create or alter procedure UpdateOrderStatus
 	@order_id int,
 	@order_status varchar(30)
 as
@@ -275,8 +335,8 @@ as
 		set order_status = @order_status
 	where order_id=@order_id
 go
-
-create procedure DeleteWorker
+--DELETE--
+create or alter procedure DeleteWorker
 	@worker_id int
 as
 	DELETE from users

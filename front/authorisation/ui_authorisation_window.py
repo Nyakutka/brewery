@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\учеба\brewery\front\authorisation\authorisation_window.ui'
+# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\authorisation\authorisation_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #

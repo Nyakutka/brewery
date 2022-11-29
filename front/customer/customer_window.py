@@ -276,6 +276,8 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
     def __init_account_tab(self):
         self.invalid_address_label.hide()
         self.invalid_telephone_number_label.hide()
+        self.change_telephone_number_button.clicked.connect(self.__change_phone_number)
+        self.change_address_button.clicked.connect(self.__change_address)
         self.telephone_number_line.setReadOnly(True)
         self.change_telephone_number_button.setText('Change')
         self.address_line.setReadOnly(True)

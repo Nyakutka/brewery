@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>992</width>
+    <width>1200</width>
     <height>650</height>
    </rect>
   </property>
@@ -14,12 +14,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="customer_tab_widget">
+   <widget class="QTabWidget" name="worker_tab_widget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>50</y>
-      <width>1000</width>
+      <width>1200</width>
       <height>600</height>
      </rect>
     </property>
@@ -41,7 +41,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>681</width>
+        <width>631</width>
         <height>521</height>
        </rect>
       </property>
@@ -86,6 +86,88 @@
        </property>
       </column>
      </widget>
+     <widget class="QTableWidget" name="all_lack_table_widget">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>350</y>
+        <width>381</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Product Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Lack on stock</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="all_lack_label">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>280</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Products lack on stock</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="all_customer_filter_comboBox">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>300</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="total_income_label">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>260</y>
+        <width>141</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Total income by customer</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="total_income_filter_comboBox">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>260</y>
+        <width>151</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="income_label">
+      <property name="geometry">
+       <rect>
+        <x>970</x>
+        <y>260</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Income</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="orders_tab">
      <attribute name="title">
@@ -94,7 +176,7 @@
      <widget class="QComboBox" name="status_filter_comboBox">
       <property name="geometry">
        <rect>
-        <x>630</x>
+        <x>770</x>
         <y>40</y>
         <width>231</width>
         <height>31</height>
@@ -104,7 +186,7 @@
      <widget class="QLabel" name="status_filter_label">
       <property name="geometry">
        <rect>
-        <x>630</x>
+        <x>770</x>
         <y>20</y>
         <width>81</width>
         <height>21</height>
@@ -122,7 +204,7 @@
        <rect>
         <x>30</x>
         <y>20</y>
-        <width>571</width>
+        <width>721</width>
         <height>521</height>
        </rect>
       </property>
@@ -133,12 +215,22 @@
       </column>
       <column>
        <property name="text">
+        <string>Customer name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>Date</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Type</string>
+        <string>Status</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Prime cost</string>
        </property>
       </column>
       <column>
@@ -163,10 +255,10 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>630</x>
-        <y>130</y>
-        <width>301</width>
-        <height>411</height>
+        <x>770</x>
+        <y>170</y>
+        <width>381</width>
+        <height>151</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -199,8 +291,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>630</x>
-        <y>100</y>
+        <x>770</x>
+        <y>140</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -212,14 +304,76 @@
      <widget class="QPushButton" name="hide_details_button">
       <property name="geometry">
        <rect>
-        <x>770</x>
-        <y>100</y>
+        <x>1070</x>
+        <y>140</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>Hide</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="customer_filter_comboBox">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>100</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="customer_filter_label">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>80</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Filter by customer:</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="lack_table_widget">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>360</y>
+        <width>381</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Product Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Lack on stock</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="lack_label">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>330</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Products lack on stock</string>
       </property>
      </widget>
     </widget>
@@ -425,7 +579,7 @@
    <widget class="QLabel" name="signed_label">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>820</x>
       <y>10</y>
       <width>261</width>
       <height>20</height>
@@ -438,7 +592,7 @@
    <widget class="QPushButton" name="sign_out_button">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>1080</x>
       <y>10</y>
       <width>91</width>
       <height>31</height>
