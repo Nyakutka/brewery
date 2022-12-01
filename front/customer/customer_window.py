@@ -21,7 +21,8 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         self.initTab()
         self.customer_tab_widget.currentChanged.connect(self.initTab)
         self.cancel_new_order_button.clicked.connect(self.__cancel_new_order_mode)
-
+        self.new_order_button.clicked.connect(self.__initCatalogTab_new_order_mode)
+        self.submit_new_order_button.clicked.connect(self.__submit_order)
         self.sign_out_button.clicked.connect(self.__sign_out)
 
         
@@ -60,7 +61,7 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
 
     def __initCatalogTab(self):
         self.new_order_button.setEnabled(True)
-        self.new_order_button.clicked.connect(self.__initCatalogTab_new_order_mode)
+        
         self.submit_new_order_button.hide()
         self.new_order_table_widget.hide()
         self.cancel_new_order_button.hide()
@@ -85,7 +86,7 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
     def __initCatalogTab_new_order_mode(self):
         self.new_order_button.setEnabled(False)
         self.new_order_table_widget.show()
-        self.submit_new_order_button.clicked.connect(self.__submit_order)
+
         
         if self.new_order_table_widget.rowCount() > 0:
             self.submit_new_order_button.show()
@@ -177,7 +178,7 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
 
     def __initOrdersTab(self):
         if self.status_filter_comboBox.count() == 0:
-            self.status_filter_comboBox.addItems(['all', 'pending', 'processing', 'cancelled'])
+            self.status_filter_comboBox.addItems(['all', 'pending', 'processing', 'cancelled', 'completed'])
         self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
         
         self.order_number_label.hide()
@@ -185,9 +186,9 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         self.hide_details_button.hide()
         self.orders_table_widget.setRowCount(0)
         if (self.status_filter_comboBox.currentText() == 'all'):
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_id {self.customer_id}')
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_id_ForCustomer {self.customer_id}')
         else:
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status {self.customer_id}, {self.status_filter_comboBox.currentText()}')
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_ForCustomer {self.customer_id}, {self.status_filter_comboBox.currentText()}')
 
         while query.next():
             rows = self.orders_table_widget.rowCount()

@@ -65,7 +65,7 @@ class Ui_RegistrationWindow(object):
         self.invalid_email_label.setStyleSheet("")
         self.invalid_email_label.setObjectName("invalid_email_label")
         self.invalid_phone_number_label = QtWidgets.QLabel(self.centralwidget)
-        self.invalid_phone_number_label.setGeometry(QtCore.QRect(320, 160, 161, 16))
+        self.invalid_phone_number_label.setGeometry(QtCore.QRect(320, 160, 221, 16))
         self.invalid_phone_number_label.setStyleSheet("")
         self.invalid_phone_number_label.setObjectName("invalid_phone_number_label")
         self.invalid_address_label = QtWidgets.QLabel(self.centralwidget)

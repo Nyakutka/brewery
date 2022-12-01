@@ -147,6 +147,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../signboared.qrc"/>
+ </resources>
  <connections/>
 </ui>

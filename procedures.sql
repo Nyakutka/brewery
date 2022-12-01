@@ -206,10 +206,20 @@ create or alter procedure InsertProduct
 	@product_name varchar(30),
 	@product_type varchar(30),
 	@upc_code varchar(12),
-	@prime_price decimal(8, 2)
+	@prime_price decimal(8, 2),
+	@discount decimal(8, 2),
+	@amount int
 as
-INSERT INTO products(product_name, product_type, upc_code, prime_price) 
-	VALUES (@product_name, @product_type, @upc_code, @prime_price)
+BEGIN TRANSACTION
+	INSERT INTO products(product_name, product_type, upc_code, prime_price) 
+		VALUES (@product_name, @product_type, @upc_code, @prime_price)
+	Declare @product_id INT
+	Set @product_id=(select product_id from products where product_name=@product_name)
+	EXEC UpdateDiscount @product_id, @discount
+	EXEC UpdateAmountOnStock @product_id, @amount
+	IF (@@error <> 0)
+		ROLLBACK
+COMMIT
 GO
 
 ---
@@ -240,7 +250,6 @@ create or alter procedure InsertCustomer
 	@address varchar(30),
 	@user_password varchar(30)
 as
-BEGIN
 	BEGIN TRANSACTION
 		INSERT INTO users(username,
 				user_password,
@@ -263,7 +272,6 @@ BEGIN
 		IF (@@error <> 0)
         	ROLLBACK
 	COMMIT
-END
 GO
 
 create or alter procedure InsertOrder
@@ -288,7 +296,9 @@ create or alter procedure UpdateProduct
 	@product_name varchar(30),
 	@product_type varchar(30),
 	@upc_code varchar(30),
-	@prime_price varchar(30)
+	@prime_price varchar(30),
+	@discount decimal(8, 2),
+	@amount int
 as
 	UPDATE products
 		set product_name = @product_name,
@@ -296,6 +306,8 @@ as
 			upc_code = @upc_code,
 			prime_price = @prime_price
 	where product_id=@product_id
+	EXEC UpdateDiscount @product_id, @discount
+	EXEC UpdateAmountOnStock @product_id, @amount
 GO
 
 create or alter procedure UpdateDiscount

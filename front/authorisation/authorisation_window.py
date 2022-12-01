@@ -29,16 +29,18 @@ class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
         username = self.username_line_edit.text()
         password = self.password_line_edit.text()
         query = QSqlQuery()
-        query.exec(f"select user_id, user_role from users where username='{username}' and user_password=HASHBYTES('SHA2_256', '{password}')")
+        query.exec(f"select user_role from users where username='{username}' and user_password=HASHBYTES('SHA2_256', '{password}')")
         query.first()
-        self.user_id = query.value(0)
-        self.role = query.value(1)
-        if (self.user_id is None):
+        self.role = query.value(0)
+        if (self.role is None):
             self.invalid_auth_label.show()
         else:
             if self.role == 'customer':
+                query.exec(f"select customer_id from customers join users on customers.user_id=users.user_id where username='{username}' and user_password=HASHBYTES('SHA2_256', '{password}')")
+                query.first()
+                self.customer_id = query.value(0)
                 self.invalid_auth_label.hide()
-                window = CustomerWindow(app_widget=self.app_widget, db=self.db, customer_id=self.user_id, customer_username=username)
+                window = CustomerWindow(app_widget=self.app_widget, db=self.db, customer_id=self.customer_id, customer_username=username)
                 self.username_line_edit.setText('')
                 self.password_line_edit.setText('')
                 self.app_widget.setFixedWidth(1000)
@@ -46,8 +48,11 @@ class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
                 self.app_widget.addWidget(window)
                 self.app_widget.setCurrentIndex(self.app_widget.count() - 1)
             elif self.role == 'worker':
+                query.exec(f"select worker_id from workers join users on workers.user_id=users.user_id where username='{username}' and user_password=HASHBYTES('SHA2_256', '{password}')")
+                query.first()
+                self.worker_id = query.value(0)
                 self.invalid_auth_label.hide()
-                window = WorkerWindow(app_widget=self.app_widget, db=self.db, worker_id=self.user_id, worker_username=username)
+                window = WorkerWindow(app_widget=self.app_widget, db=self.db, worker_id=self.worker_id, worker_username=username)
                 self.username_line_edit.setText('')
                 self.password_line_edit.setText('')
                 self.app_widget.setFixedWidth(1200)

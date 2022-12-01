@@ -6,6 +6,8 @@ import sys
 # sys.path.append('D:/учеба/brewery/db_connection')
 sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
 from db_connection import DataBaseConnection
+import re
+regex = re.compile(r"([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])")
 
 class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
     def __init__(self, app_widget, db, *args, **kwargs):
@@ -59,36 +61,48 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             self.registration_successful_label.setText(f'Registration successful, your username is: {username}')
             self.registration_successful_label.show()
         else:
+            print(re.fullmatch(regex, email))
             print(query.lastError().text())
             if company_name == '':
                 self.invalid_company_name_label.setText('\u274c Empty field')
                 self.invalid_company_name_label.show()
-            if email == '':
-                self.invalid_email_label.setText('\u274c Empty field')
-                self.invalid_email_label.show()
-            if query.lastError().text().__contains__('LEFT'):
+            else:
+                self.invalid_company_name_label.setText('\u2713')
+                self.invalid_company_name_label.show()
+            if query.lastError().text().__contains__('LEFT') or re.fullmatch(regex, email) is None:
                 self.invalid_email_label.setText('\u274c Incorrect email')
                 self.invalid_email_label.show() 
-            if query.lastError().databaseText().__contains__('@'):
+            elif query.lastError().databaseText().__contains__('@'):
                 self.invalid_email_label.setText('\u274c This email is already used!')
                 self.invalid_email_label.show()
-            if phone_number == '':
-                self.invalid_phone_number_label.setText('\u274c Empty field')
-                self.invalid_phone_number_label.show()
-            if query.lastError().text().__contains__('CK_CUSTOMER_PHONE_NUMBER'):
+            else:
+                self.invalid_email_label.setText('\u2713')
+                self.invalid_email_label.show()
+            if phone_number == '' or query.lastError().text().__contains__('CK_CUSTOMER_PHONE_NUMBER') or len(phone_number) != 11:
                 self.invalid_phone_number_label.setText('\u274c Incorrect number')
                 self.invalid_phone_number_label.show()
-            if query.lastError().text().__contains__('UQ_CUSTOMER_PHONE_NUMBER'):
+            elif query.lastError().text().__contains__('UQ_CUSTOMER_PHONE_NUMBER'):
                 self.invalid_phone_number_label.setText('\u274c This phone number is already used!')
                 self.invalid_phone_number_label.show()   
-                print('aboba')
+            else:
+                self.invalid_phone_number_label.setText('\u2713')
+                self.invalid_phone_number_label.show()
             if address == '':
                 self.invalid_address_label.setText('\u274c Empty field')
+                self.invalid_address_label.show()
+            else:
+                self.invalid_address_label.setText('\u2713')
                 self.invalid_address_label.show()
             if password == '':
                 self.invalid_password_label.setText('\u274c Empty field')
                 self.invalid_password_label.show()
-            if confirmed_password != password:
+            else:
+                self.invalid_password_label.setText('\u2713')
+                self.invalid_password_label.show()
+            if confirmed_password != password or len(password) == 0:
                 self.passwords_match_label.setText("\u274c Passwords don't match")
+                self.passwords_match_label.show()
+            else:
+                self.passwords_match_label.setText('\u2713')
                 self.passwords_match_label.show()
             

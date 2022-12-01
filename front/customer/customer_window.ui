@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>650</height>
+    <width>1002</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -49,6 +49,9 @@
        <width>451</width>
        <height>521</height>
       </rect>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <column>
       <property name="text">
@@ -103,6 +106,9 @@
      </property>
      <property name="autoFillBackground">
       <bool>false</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <column>
       <property name="text">
@@ -217,6 +223,9 @@
        <height>521</height>
       </rect>
      </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
      <column>
       <property name="text">
        <string>Order number</string>
@@ -262,6 +271,9 @@
      </property>
      <property name="autoFillBackground">
       <bool>false</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <column>
       <property name="text">
@@ -535,6 +547,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../signboared.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -14,21 +14,11 @@ with engine.begin() as conn:
 	conn.execute("exec InsertWorker ?, ?, ?, ?", 'v.pupkin@brewery.com', 'Василий', 'Пупкин', 'vpupkinpass')
 	conn.execute("exec InsertWorker ?, ?, ?, ?", 'n.pechkin@brewery.com', 'Николай', 'Печкин', 'npechkinpass')
 
-	conn.execute("exec InsertProduct ?, ?, ?, ?", 'Балтика 7', 'Пиво', '123456789121', 67)
-	conn.execute("exec InsertProduct ?, ?, ?, ?", 'Балтика 8', 'Пиво', '123456789122', 68)
-	conn.execute("exec InsertProduct ?, ?, ?, ?", 'Балтика 9', 'Пиво', '123456789123', 69)
-	conn.execute("exec InsertProduct ?, ?, ?, ?", 'Strongbow яблоко', 'Сидр', '123456789124', 57)
-	conn.execute("exec InsertProduct ?, ?, ?, ?", 'Strongbow груша', 'Сидр', '123456789125', 58)
-
-	conn.execute("exec UpdateAmountOnStock ?, ?", 1, 1)
-	conn.execute("exec UpdateAmountOnStock ?, ?", 2, 2)
-	conn.execute("exec UpdateAmountOnStock ?, ?", 3, 3)
-	conn.execute("exec UpdateAmountOnStock ?, ?", 4, 4)
-	conn.execute("exec UpdateAmountOnStock ?, ?", 5, 5)
-
-	conn.execute("exec UpdateDiscount ?, ?", 1, 0.10)
-	conn.execute("exec UpdateDiscount ?, ?", 3, 0.20)
-	conn.execute("exec UpdateDiscount ?, ?", 5, 0.30)
+	conn.execute("exec InsertProduct ?, ?, ?, ?, ?, ?", 'Балтика 7', 'Пиво', '123456789121', 67, 0.10, 1)
+	conn.execute("exec InsertProduct ?, ?, ?, ?, ?, ?", 'Балтика 8', 'Пиво', '123456789122', 68, 0, 2)
+	conn.execute("exec InsertProduct ?, ?, ?, ?, ?, ?", 'Балтика 9', 'Пиво', '123456789123', 69, 0.20, 3)
+	conn.execute("exec InsertProduct ?, ?, ?, ?, ?, ?", 'Strongbow яблоко', 'Сидр', '123456789124', 57, 0, 4)
+	conn.execute("exec InsertProduct ?, ?, ?, ?, ?, ?", 'Strongbow груша', 'Сидр', '123456789125', 58, 0.30, 5)
 
 	conn.execute("exec InsertOrder ?, ?", 1, '2022-05-23T14:25:10')
 	conn.execute("exec InsertOrder_details ?, ?, ?", 1, 1, 1)
