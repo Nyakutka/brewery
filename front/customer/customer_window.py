@@ -1,13 +1,6 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
-from ui_customer_window import Ui_CustomerForm
-from datetime import datetime
-import sys
-# sys.path.append('D:/учеба/brewery/db_connection')
-# sys.path.append('D:/учеба/brewery/front/authorisation')
-sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
-sys.path.append('D:/учеба/бд/курсач/brewery/front/authorisation')
-from db_connection import DataBaseConnection
+from PyQt6.QtSql import QSqlQuery
+from PyQt6 import QtCore, QtWidgets
+from ui.ui_customer_window import Ui_CustomerForm
 
 class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
     def __init__(self, app_widget, db, customer_id: int, customer_username: str, *args, **kwargs):
@@ -25,7 +18,6 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         self.submit_new_order_button.clicked.connect(self.__submit_order)
         self.sign_out_button.clicked.connect(self.__sign_out)
 
-        
     def __cancel_new_order_mode(self):
         qm = QtWidgets.QMessageBox()
         ret = qm.question(self,'Confirmation', "Cancel creating order?", qm.StandardButton.Yes | qm.StandardButton.No)
@@ -299,4 +291,3 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
             self.__initOrdersTab()
         elif(self.customer_tab_widget.currentIndex() == 2):
             self.__init_account_tab()
-

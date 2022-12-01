@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\customer\customer_window.ui'
+# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\customer\ui\customer_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -173,11 +173,17 @@ class Ui_CustomerForm(object):
         self.invalid_address_label.setObjectName("invalid_address_label")
         self.customer_tab_widget.addTab(self.account_tab, "")
         self.signed_label = QtWidgets.QLabel(CustomerForm)
-        self.signed_label.setGeometry(QtCore.QRect(620, 10, 261, 20))
+        self.signed_label.setGeometry(QtCore.QRect(640, 20, 241, 20))
         self.signed_label.setObjectName("signed_label")
         self.sign_out_button = QtWidgets.QPushButton(CustomerForm)
         self.sign_out_button.setGeometry(QtCore.QRect(880, 10, 91, 31))
         self.sign_out_button.setObjectName("sign_out_button")
+        self.welcome_label = QtWidgets.QLabel(CustomerForm)
+        self.welcome_label.setGeometry(QtCore.QRect(0, -10, 411, 41))
+        font = QtGui.QFont()
+        font.setPointSize(21)
+        self.welcome_label.setFont(font)
+        self.welcome_label.setObjectName("welcome_label")
 
         self.retranslateUi(CustomerForm)
         self.customer_tab_widget.setCurrentIndex(0)
@@ -240,3 +246,4 @@ class Ui_CustomerForm(object):
         self.customer_tab_widget.setTabText(self.customer_tab_widget.indexOf(self.account_tab), _translate("CustomerForm", "My account"))
         self.signed_label.setText(_translate("CustomerForm", "You are signed as"))
         self.sign_out_button.setText(_translate("CustomerForm", "Sign out"))
+        self.welcome_label.setText(_translate("CustomerForm", "Nyakutka\'s Brewery"))

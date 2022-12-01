@@ -193,10 +193,11 @@ go
 ---
 create or alter procedure ShowWorkers
 as
-select email, 
-	username, 
+select username, 
+	email,
 	first_name, 
-	second_name 
+	second_name,
+	user_role
 from workers 
 	join users on workers.user_id=users.user_id
 go
@@ -349,8 +350,8 @@ as
 go
 --DELETE--
 create or alter procedure DeleteWorker
-	@worker_id int
+	@user_id int
 as
 	DELETE from users
-		where user_id=@worker_id
+		where user_id=@user_id
 go

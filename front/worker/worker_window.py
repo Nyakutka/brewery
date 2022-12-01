@@ -1,13 +1,6 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
-from ui_worker_window import Ui_WorkerWindow
-from datetime import datetime
-import sys
-# sys.path.append('D:/учеба/brewery/db_connection')
-# sys.path.append('D:/учеба/brewery/front/authorisation')
-sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
-sys.path.append('D:/учеба/бд/курсач/brewery/front/authorisation')
-from db_connection import DataBaseConnection
+from PyQt6.QtSql import QSqlQuery
+from PyQt6 import QtCore, QtWidgets
+from ui.ui_worker_window import Ui_WorkerWindow
 
 class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
     def __init__(self, app_widget, db, worker_id: int, worker_username: str, *args, **kwargs):

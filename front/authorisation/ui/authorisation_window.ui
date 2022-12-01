@@ -121,7 +121,7 @@
      <rect>
       <x>190</x>
       <y>340</y>
-      <width>121</width>
+      <width>131</width>
       <height>16</height>
      </rect>
     </property>
@@ -147,8 +147,6 @@
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="../signboared.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

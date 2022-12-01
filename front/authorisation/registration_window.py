@@ -1,12 +1,8 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
-from ui_registration_window import Ui_RegistrationWindow
-from datetime import datetime
-import sys
-# sys.path.append('D:/учеба/brewery/db_connection')
-sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
-from db_connection import DataBaseConnection
+from PyQt6.QtSql import QSqlQuery
+from PyQt6 import QtWidgets
+from ui.ui_registration_window import Ui_RegistrationWindow
 import re
+
 regex = re.compile(r"([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])")
 
 class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
@@ -47,9 +43,8 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
         password = self.password_line.text()
         confirmed_password = self.confirm_password_line.text()
         username = self.email_line.text().split('@')[0]
-        print('--', company_name, email, phone_number, address, password, confirmed_password)
         query = QSqlQuery()
-        query.exec(f'exec InsertCustomer {company_name}, "{email}", "{phone_number}", "{address}", "{password}"')
+        query.exec(f'exec InsertCustomer "{company_name}", "{email}", "{phone_number}", "{address}", "{password}"')
         if query.lastError().text() == '':
             self.company_name_line.setReadOnly(True)
             self.email_line.setReadOnly(True)
@@ -61,8 +56,6 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             self.registration_successful_label.setText(f'Registration successful, your username is: {username}')
             self.registration_successful_label.show()
         else:
-            print(re.fullmatch(regex, email))
-            print(query.lastError().text())
             if company_name == '':
                 self.invalid_company_name_label.setText('\u274c Empty field')
                 self.invalid_company_name_label.show()
@@ -72,7 +65,7 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             if query.lastError().text().__contains__('LEFT') or re.fullmatch(regex, email) is None:
                 self.invalid_email_label.setText('\u274c Incorrect email')
                 self.invalid_email_label.show() 
-            elif query.lastError().databaseText().__contains__('@'):
+            elif query.lastError().databaseText().__contains__('UQ_CUSTOMER_EMAIL'):
                 self.invalid_email_label.setText('\u274c This email is already used!')
                 self.invalid_email_label.show()
             else:

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\authorisation\authorisation_window.ui'
+# Form implementation generated from reading ui file 'd:\учеба\бд\курсач\brewery\front\authorisation\ui\authorisation_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -43,7 +43,7 @@ class Ui_AuthorisationWindow(object):
         self.welcome_label.setFont(font)
         self.welcome_label.setObjectName("welcome_label")
         self.sign_up_label = QtWidgets.QLabel(self.centralwidget)
-        self.sign_up_label.setGeometry(QtCore.QRect(190, 340, 121, 16))
+        self.sign_up_label.setGeometry(QtCore.QRect(190, 340, 131, 16))
         self.sign_up_label.setObjectName("sign_up_label")
         self.invalid_auth_label = QtWidgets.QLabel(self.centralwidget)
         self.invalid_auth_label.setGeometry(QtCore.QRect(170, 280, 161, 16))

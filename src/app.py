@@ -1,10 +1,5 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
-from datetime import datetime
+from PyQt6 import QtWidgets
 import sys
-# sys.path.append('D:/учеба/brewery/db_connection')
-# sys.path.append('D:/учеба/brewery/front/authorisation')
-sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
 sys.path.append('D:/учеба/бд/курсач/brewery/front/authorisation')
 from authorisation_window import AuthorisationWindow
             

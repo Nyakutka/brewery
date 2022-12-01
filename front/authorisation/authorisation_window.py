@@ -1,17 +1,18 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt6 import QtCore, QtGui, QtWidgets, QtSql
-from ui_authorisation_window import Ui_AuthorisationWindow
+from PyQt6.QtSql import QSqlQuery
+from PyQt6 import QtWidgets
+from ui.ui_authorisation_window import Ui_AuthorisationWindow
 from registration_window import RegistrationWindow
-from datetime import datetime
+
 import sys
-# sys.path.append('D:/учеба/brewery/db_connection')
-# sys.path.append('D:/учеба/brewery/front/customer')
+
 sys.path.append('D:/учеба/бд/курсач/brewery/db_connection')
 sys.path.append('D:/учеба/бд/курсач/brewery/front/customer')
 sys.path.append('D:/учеба/бд/курсач/brewery/front/worker')
+sys.path.append('D:/учеба/бд/курсач/brewery/front/admin')
 from db_connection import DataBaseConnection
 from customer_window import CustomerWindow
 from worker_window import WorkerWindow
+from admin_window import AdminWindow
 
 class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
     def __init__(self, app_widget, *args, **kwargs):
@@ -59,7 +60,18 @@ class AuthorisationWindow(QtWidgets.QMainWindow, Ui_AuthorisationWindow):
                 self.app_widget.setFixedHeight(650)
                 self.app_widget.addWidget(window)
                 self.app_widget.setCurrentIndex(self.app_widget.count() - 1)
-            # self.close()
+            elif self.role == 'admin':
+                query.exec(f"select worker_id from workers join users on workers.user_id=users.user_id where username='{username}' and user_password=HASHBYTES('SHA2_256', '{password}')")
+                query.first()
+                self.worker_id = query.value(0)
+                self.invalid_auth_label.hide()
+                window = AdminWindow(app_widget=self.app_widget, db=self.db, worker_id=self.worker_id, worker_username=username)
+                self.username_line_edit.setText('')
+                self.password_line_edit.setText('')
+                self.app_widget.setFixedWidth(1200)
+                self.app_widget.setFixedHeight(650)
+                self.app_widget.addWidget(window)
+                self.app_widget.setCurrentIndex(self.app_widget.count() - 1)
 
     def __register(self):
         window = RegistrationWindow(app_widget=self.app_widget, db=self.db)
