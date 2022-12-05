@@ -46,7 +46,10 @@
        </rect>
       </property>
       <property name="mouseTracking">
-       <bool>true</bool>
+       <bool>false</bool>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>

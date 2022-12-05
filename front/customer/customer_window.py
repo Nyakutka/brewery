@@ -1,5 +1,5 @@
 from PyQt6.QtSql import QSqlQuery
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, QtGui
 from ui.ui_customer_window import Ui_CustomerForm
 
 class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
@@ -12,6 +12,9 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         self.signed_label.setText(f"You are signed in as customer: {customer_username}")
         self.customer_id = customer_id
         self.initTab()
+
+        self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
+        self.date_filter_comboBox.currentTextChanged.connect(self.initTab)
         self.customer_tab_widget.currentChanged.connect(self.initTab)
         self.cancel_new_order_button.clicked.connect(self.__cancel_new_order_mode)
         self.new_order_button.clicked.connect(self.__initCatalogTab_new_order_mode)
@@ -20,14 +23,22 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
 
     def __cancel_new_order_mode(self):
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', "Cancel creating order?", qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setText(f"Cancel creating order?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
 
         if ret == qm.StandardButton.Yes:
             self.__initCatalogTab()
 
     def __sign_out(self):
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', "Sign out?", qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setText(f"Sign out?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
 
         if ret == qm.StandardButton.Yes:
             self.app_widget.setFixedWidth(500)
@@ -78,7 +89,6 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
     def __initCatalogTab_new_order_mode(self):
         self.new_order_button.setEnabled(False)
         self.new_order_table_widget.show()
-
         
         if self.new_order_table_widget.rowCount() > 0:
             self.submit_new_order_button.show()
@@ -149,7 +159,11 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         
     def __submit_order(self):
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', "Submit new order?", qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setText(f"Submit new order?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
 
         if ret == qm.StandardButton.Yes:
             query = QSqlQuery(f'exec InsertOrder {self.customer_id}, "{QtCore.QDateTime.currentDateTime().toString(QtCore.Qt.DateFormat.ISODate)}"')
@@ -165,22 +179,41 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
                 amount = self.new_order_table_widget.cellWidget(i, 1).value()
                 query = QSqlQuery(f'exec InsertOrder_details {order_number}, {product_id}, {amount}')
                 query.exec()
-        
+
+            qm = QtWidgets.QMessageBox()
+            qm.setText(f"New order was added successfully!")
+            qm.setWindowTitle("Successful")
+            qm.setStandardButtons(qm.StandardButton.Ok)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
             self.__initCatalogTab()
 
     def __initOrdersTab(self):
         if self.status_filter_comboBox.count() == 0:
             self.status_filter_comboBox.addItems(['all', 'pending', 'processing', 'cancelled', 'completed'])
-        self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
-        
+        if self.date_filter_comboBox.count() == 0:
+            self.date_filter_comboBox.addItems(['all', 'Last week', 'Last month', 'Last year'])
         self.order_number_label.hide()
         self.details_table_widget.hide()
         self.hide_details_button.hide()
         self.orders_table_widget.setRowCount(0)
-        if (self.status_filter_comboBox.currentText() == 'all'):
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_id_ForCustomer {self.customer_id}')
+        if self.status_filter_comboBox.currentText() == 'all':
+            if self.date_filter_comboBox.currentText() == 'all':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_ForCustomer {self.customer_id}')
+            elif self.date_filter_comboBox.currentText() == 'Last week':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastWeek_ForCustomer {self.customer_id}')
+            elif self.date_filter_comboBox.currentText() == 'Last month':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastMonth_ForCustomer {self.customer_id}')
+            elif self.date_filter_comboBox.currentText() == 'Last year':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastYear_ForCustomer {self.customer_id}')
         else:
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_ForCustomer {self.customer_id}, {self.status_filter_comboBox.currentText()}')
+            if self.date_filter_comboBox.currentText() == 'all':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_ForCustomer {self.customer_id}, {self.status_filter_comboBox.currentText()}')
+            elif self.date_filter_comboBox.currentText() == 'Last week':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastWeek_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
+            elif self.date_filter_comboBox.currentText() == 'Last month':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastMonth_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
+            elif self.date_filter_comboBox.currentText() == 'Last year':
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastYear_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
 
         while query.next():
             rows = self.orders_table_widget.rowCount()
@@ -204,12 +237,20 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
 
     def __cancel_order(self):
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', "Cancel order?", qm.StandardButton.Yes | qm.StandardButton.No)
-
+        qm.setText(f"Cancel order {order_id}?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
         if ret == qm.StandardButton.Yes:
             order_id = self.orders_table_widget.item(self.orders_table_widget.currentRow(), 0).text()
             query = QSqlQuery(f'exec UpdateOrderStatus {order_id}, "cancelled"')
             query.exec()
+            qm = QtWidgets.QMessageBox()
+            qm.setText(f"Order {order_id} was cancelled successfully!")
+            qm.setWindowTitle("Successful")
+            qm.setStandardButtons(qm.StandardButton.Ok)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
             self.__initOrdersTab()
 
     def __change_phone_number(self):
@@ -233,13 +274,22 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
                 self.__change_phone_number()
             else:
                 qm = QtWidgets.QMessageBox()
-                ret = qm.question(self,'Confirmation', "Update telephon number?", qm.StandardButton.Yes | qm.StandardButton.No)
+                qm.setText(f"Update telephon number?")
+                qm.setWindowTitle("Confirmation")
+                qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+                qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+                ret = qm.exec()
 
                 if ret == qm.StandardButton.Yes:
                     self.change_address_button.setEnabled(True)
                     self.invalid_telephone_number_label.hide()
                     self.change_telephone_number_button.setText('Change')
                     self.telephone_number_line.setReadOnly(True)
+                    qm = QtWidgets.QMessageBox()
+                    qm.setText(f"Telephon number was updated successfully!")
+                    qm.setWindowTitle("Successful")
+                    qm.setStandardButtons(qm.StandardButton.Ok)
+                    qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
             
     def __change_address(self):
         if self.change_address_button.text() == 'Change':
@@ -258,13 +308,22 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
                 self.__change_address()
             else:
                 qm = QtWidgets.QMessageBox()
-                ret = qm.question(self,'Confirmation', "Update address?", qm.StandardButton.Yes | qm.StandardButton.No)
+                qm.setText(f"Update address?")
+                qm.setWindowTitle("Confirmation")
+                qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+                qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+                ret = qm.exec()
 
                 if ret == qm.StandardButton.Yes:
                     self.change_telephone_number_button.setEnabled(True)
                     self.invalid_address_label.hide()
                     self.change_address_button.setText('Change')
                     self.address_line.setReadOnly(True)
+                    qm = QtWidgets.QMessageBox()
+                    qm.setText(f"Address was updated successfully!")
+                    qm.setWindowTitle("Successful")
+                    qm.setStandardButtons(qm.StandardButton.Ok)
+                    qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
 
     def __init_account_tab(self):
         self.invalid_address_label.hide()

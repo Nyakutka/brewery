@@ -88,7 +88,7 @@ IF OBJECT_ID(N'dbo.products', N'U') IS NULL
             CONSTRAINT UQ_PRODUCT_NAME UNIQUE,
         [product_type] [varchar](30) NOT NULL,
         [upc_code] [varchar](12) NOT NULL
-            CONSTRAINT UQ_PRODUCT_UPC UNIQUE
+            CONSTRAINT UQ_PRODUCT_UPC UNIQUE(upc_code)
             CONSTRAINT CK_PRODUCT_UPC CHECK(LEN(upc_code) = 12),
         [prime_price] [decimal](8, 2) NOT NULL,
         [retail_price] as prime_price * 1.38,

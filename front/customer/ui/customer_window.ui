@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1002</width>
-    <height>622</height>
+    <width>1001</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -264,9 +264,9 @@
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>130</y>
+       <y>200</y>
        <width>301</width>
-       <height>411</height>
+       <height>341</height>
       </rect>
      </property>
      <property name="autoFillBackground">
@@ -303,7 +303,7 @@
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>100</y>
+       <y>170</y>
        <width>111</width>
        <height>21</height>
       </rect>
@@ -316,13 +316,39 @@
      <property name="geometry">
       <rect>
        <x>770</x>
-       <y>100</y>
+       <y>170</y>
        <width>75</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
       <string>Hide</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="date_filter_comboBox">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>100</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="date_filter_label">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>80</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Filter by date:</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>
@@ -565,8 +591,6 @@
    </property>
   </widget>
  </widget>
- <resources>
-  <include location="../signboared.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

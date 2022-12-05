@@ -276,22 +276,6 @@
      <string>Back to authorisation</string>
     </property>
    </widget>
-   <widget class="QLabel" name="registration_successful_label">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>360</y>
-      <width>281</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 255, 0);</string>
-    </property>
-    <property name="text">
-     <string>Registration successful, your username is:</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="invalid_company_name_label">
     <property name="geometry">
      <rect>

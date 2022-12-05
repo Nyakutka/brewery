@@ -100,7 +100,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>70</y>
+      <y>190</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -113,7 +113,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>70</y>
+      <y>190</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -126,7 +126,7 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>70</y>
+      <y>190</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -139,7 +139,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>130</y>
+      <y>250</y>
       <width>211</width>
       <height>20</height>
      </rect>
@@ -152,7 +152,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>170</y>
+      <y>290</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -165,7 +165,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>190</y>
+      <y>310</y>
       <width>211</width>
       <height>20</height>
      </rect>
@@ -178,7 +178,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>230</y>
+      <y>350</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -191,7 +191,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>250</y>
+      <y>370</y>
       <width>211</width>
       <height>20</height>
      </rect>
@@ -204,7 +204,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>290</y>
+      <y>410</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -217,7 +217,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>310</y>
+      <y>430</y>
       <width>211</width>
       <height>20</height>
      </rect>
@@ -233,7 +233,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>100</y>
+      <y>220</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -264,7 +264,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>150</y>
+      <y>270</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -280,7 +280,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>210</y>
+      <y>330</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -296,7 +296,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>270</y>
+      <y>390</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -312,7 +312,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>330</y>
+      <y>450</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -322,6 +322,44 @@
     </property>
     <property name="text">
      <string>Invalid password</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="role_filter_comboBox">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>90</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>all</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>admin</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>worker</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="role_filter_label">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>70</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Role</string>
     </property>
    </widget>
   </widget>

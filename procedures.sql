@@ -153,6 +153,75 @@ from Orders
 where customer_id = @customer_id and order_status = @order_status
 go
 ---
+create or alter procedure ShowOrdersByCustomer_id_LastWeek_ForCustomer
+	@customer_id int
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 7
+go
+---
+create or alter procedure ShowOrdersByCustomer_id_LastMonth_ForCustomer
+	@customer_id int
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 30
+go
+---
+create or alter procedure ShowOrdersByCustomer_id_LastYear_ForCustomer
+	@customer_id int
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 365
+go
+---
+create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastWeek_ForCustomer
+	@customer_id int,
+	@order_status varchar(30)
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 7
+go
+---
+create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastMonth_ForCustomer
+	@customer_id int,
+	@order_status varchar(30)
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 30
+go
+---
+create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastYear_ForCustomer
+	@customer_id int,
+	@order_status varchar(30)
+as
+select order_id,
+	order_date,
+	order_status, 
+	total_cost
+from Orders
+where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 365
+go
+---
 create or alter procedure ShowOrderDetails
 @order_id int
 as
@@ -202,6 +271,19 @@ from workers
 	join users on workers.user_id=users.user_id
 go
 ---
+create or alter procedure ShowWorkersByRole
+	@user_role varchar(10)
+as
+select username, 
+	email,
+	first_name, 
+	second_name,
+	user_role
+from workers 
+	join users on workers.user_id=users.user_id
+	where user_role = @user_role
+go
+---
 --INSERT--
 create or alter procedure InsertProduct
 	@product_name varchar(30),
@@ -231,6 +313,7 @@ create or alter procedure InsertWorker
 	@user_password varchar(30)
 as
 BEGIN
+BEGIN TRANSACTION
 	INSERT INTO users(username, user_password, user_role) 
 		VALUES (left(@email, charindex('@', @email) - 1), HASHBYTES('SHA2_256', @user_password), 'worker');
 	INSERT INTO workers(user_id, email, first_name, second_name)
@@ -241,6 +324,7 @@ BEGIN
 			@first_name,
 			@second_name
 		)
+COMMIT
 END
 GO
 
@@ -301,14 +385,18 @@ create or alter procedure UpdateProduct
 	@discount decimal(8, 2),
 	@amount int
 as
+begin TRANSACTION
 	UPDATE products
 		set product_name = @product_name,
 			product_type = @product_type,
 			upc_code = @upc_code,
 			prime_price = @prime_price
 	where product_id=@product_id
-	EXEC UpdateDiscount @product_id, @discount
-	EXEC UpdateAmountOnStock @product_id, @amount
+	EXEC UpdateDiscount @product_id = @product_id, @discount = @discount
+	EXEC UpdateAmountOnStock @product_id = @product_id, @amount = @amount
+	IF (@@error <> 0)
+        	ROLLBACK
+COMMIT
 GO
 
 create or alter procedure UpdateDiscount

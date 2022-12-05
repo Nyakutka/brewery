@@ -1,5 +1,5 @@
 from PyQt6.QtSql import QSqlQuery
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtGui
 from ui.ui_registration_window import Ui_RegistrationWindow
 import re
 
@@ -19,8 +19,6 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
         self.invalid_address_label.hide()
         self.invalid_password_label.hide()
         self.passwords_match_label.hide()
-        self.registration_successful_label.hide()
-
         self.register_button.clicked.connect(self.__register)
         self.authorisation_button.clicked.connect(self.__back_to_authorisation)
 
@@ -53,8 +51,11 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             self.password_line.setReadOnly(True)
             self.confirm_password_line.setReadOnly(True)
             self.register_button.setEnabled(False)
-            self.registration_successful_label.setText(f'Registration successful, your username is: {username}')
-            self.registration_successful_label.show()
+            qm = QtWidgets.QMessageBox()
+            qm.setText(f"Registration successful, your username is: {username}")
+            qm.setWindowTitle("Successful")
+            qm.setStandardButtons(qm.StandardButton.Ok)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
         else:
             if company_name == '':
                 self.invalid_company_name_label.setText('\u274c Empty field')

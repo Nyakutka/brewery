@@ -1,5 +1,5 @@
 from PyQt6.QtSql import QSqlQuery
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtGui
 from ui.ui_admin_window import Ui_AdminWindow
 import re
 
@@ -15,6 +15,7 @@ class AdminWindow(QtWidgets.QMainWindow, Ui_AdminWindow):
         self.db = db
         self.worker_id = worker_id
         self.__init_window()
+        self.role_filter_comboBox.currentTextChanged.connect(self.__init_window)
         self.sign_out_button.clicked.connect(self.__sign_out)
         self.new_worker_button.clicked.connect(self.__new_worker)
         self.cancel_new_worker_button.clicked.connect(self.__init_window)
@@ -50,7 +51,12 @@ class AdminWindow(QtWidgets.QMainWindow, Ui_AdminWindow):
         self.invalid_password_label.hide()
         self.invalid_second_name_label.hide()
 
-        query = QSqlQuery(f'exec ShowWorkers')
+        if self.role_filter_comboBox.currentText() == 'all':
+            query = QSqlQuery('exec ShowWorkers')
+        elif self.role_filter_comboBox.currentText() == 'worker':
+            query = QSqlQuery("exec ShowWorkersByRole 'worker'")
+        elif self.role_filter_comboBox.currentText() == 'admin':
+            query = QSqlQuery("exec ShowWorkersByRole 'admin'")
 
         self.workers_table_widget.setRowCount(0)
         self.workers_table_widget.setColumnCount(6)
@@ -94,14 +100,19 @@ class AdminWindow(QtWidgets.QMainWindow, Ui_AdminWindow):
 
         if query.lastError().text() == '':
             qm = QtWidgets.QMessageBox()
-            ret = qm.question(self,'Successful', f"Worker {username} was added to the system", qm.StandardButton.Ok)
+            qm.setText(f"Registration of new worker successful, his username is: {username}")
+            qm.setWindowTitle("Successful")
+            qm.setStandardButtons(qm.StandardButton.Ok)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
+            ret = qm.exec()
             if ret == qm.StandardButton.Ok:
                 self.__init_window()
         else:
+            print(query.lastError().databaseText())
             if query.lastError().text().__contains__('LEFT') or re.fullmatch(regex, email) is None:
                 self.invalid_email_label.setText('\u274c Incorrect email')
                 self.invalid_email_label.show() 
-            elif query.lastError().databaseText().__contains__('UQ_CUSTOMER_EMAIL'):
+            elif query.lastError().databaseText().__contains__('UQ_WORKER_EMAIL'):
                 self.invalid_email_label.setText('\u274c This email is already used!')
                 self.invalid_email_label.show()
             else:
@@ -129,7 +140,12 @@ class AdminWindow(QtWidgets.QMainWindow, Ui_AdminWindow):
     def __delete_worker(self):
         username = self.workers_table_widget.item(self.workers_table_widget.currentRow(), 0).text()
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', f"delete worker {username}?", qm.StandardButton.Yes | qm.StandardButton.No)
+        qm = QtWidgets.QMessageBox()
+        qm.setText(f"Delete worker {username}?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
 
         if ret == qm.StandardButton.Yes:
             query = QSqlQuery()

@@ -1,5 +1,5 @@
 from PyQt6.QtSql import QSqlQuery
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, QtGui
 from ui.ui_worker_window import Ui_WorkerWindow
 
 class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
@@ -34,41 +34,55 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
         prime_price = self.prime_price_doubleSpinBox.value()
         discount = self.discount_doubleSpinBox.value()
         amount = self.amount_spinBox.value()
-        
         prew_product_name = self.catalog_table_widget.item(self.catalog_table_widget.currentRow(), 0).text()
-        query = QSqlQuery()
-        query.exec(f"select product_id from products where product_name='{prew_product_name}'")
-        query.first()
-        product_id = query.value(0)
-        query = QSqlQuery()
-        
-        query.exec(f'exec UpdateProduct {product_id}, "{product_name}", {type}, {upc}, {prime_price}, {discount}, {amount}')
-        if query.lastError().text() == '':
-            qm = QtWidgets.QMessageBox()
-            ret = qm.question(self,'Successful', f"Product {product_name} was updated", qm.StandardButton.Ok)
-            if ret == qm.StandardButton.Ok:
-                self.initTab()
-        else:
-            if product_name == '':
-                self.invalid_product_name_label.setText('Invalid product name')
-                self.invalid_product_name_label.show()
-            elif query.lastError().text().__contains__('UQ_PRODUCT_NAME'):
-                self.invalid_product_name_label.setText('Product with this name exists')
-                self.invalid_product_name_label.show()
+
+        qm = QtWidgets.QMessageBox()
+        qm.setText(f"Update product {prew_product_name}?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
+
+        if ret == qm.StandardButton.Yes:
+            query = QSqlQuery()
+            query.exec(f"select product_id from products where product_name='{prew_product_name}'")
+            query.first()
+            product_id = query.value(0)
+            query = QSqlQuery()
+            
+            query.exec(f'exec UpdateProduct {product_id}, "{product_name}", {type}, {upc}, {prime_price}, {discount}, {amount}')
+            if query.lastError().text() == '':
+                qm = QtWidgets.QMessageBox()
+                qm.setText(f"Product {product_name} was updated")
+                qm.setWindowTitle("Successful")
+                qm.setStandardButtons(qm.StandardButton.Ok)
+                qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
+                ret = qm.exec()
+
+                if ret == qm.StandardButton.Ok:
+                    self.__initCatalogTab()
             else:
-                self.invalid_product_name_label.hide()
-            if len(upc) != 12:
-                self.invalid_upc_label.setText('Invalid upc')
-                self.invalid_upc_label.show()
-            elif query.lastError().text().__contains__('UQ_PRODUCT_UPC'):
-                self.invalid_upc_label.setText('product with this upc exists')
-                self.invalid_upc_label.show()
-            else:
-                self.invalid_upc_label.hide()
-            if type == '':
-                self.invalid_type_label.show()
-            else:
-                self.invalid_type_label.hide()
+                if product_name == '':
+                    self.invalid_product_name_label.setText('Invalid product name')
+                    self.invalid_product_name_label.show()
+                elif query.lastError().text().__contains__('UQ_PRODUCT_NAME'):
+                    self.invalid_product_name_label.setText('Product with this name exists')
+                    self.invalid_product_name_label.show()
+                else:
+                    self.invalid_product_name_label.hide()
+                if len(upc) != 12:
+                    self.invalid_upc_label.setText('Invalid upc')
+                    self.invalid_upc_label.show()
+                elif query.lastError().text().__contains__('UQ_PRODUCT_UPC'):
+                    self.invalid_upc_label.setText('Product with this upc exists')
+                    self.invalid_upc_label.show()
+                else:
+                    self.invalid_upc_label.hide()
+                if type == '':
+                    self.invalid_type_label.show()
+                else:
+                    self.invalid_type_label.hide()
+            
 
     def __update_discount_price_label(self):
         retail_price = float(self.retail_price__value_label.text())
@@ -118,9 +132,15 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
         query.exec(f'exec InsertProduct "{product_name}", {type}, {upc}, {prime_price}, {discount}, {amount}')
         if query.lastError().text() == '':
             qm = QtWidgets.QMessageBox()
-            ret = qm.question(self,'Successful', f"Product {product_name} was added to catalog", qm.StandardButton.Ok)
+            qm.setText(f"Product {product_name} was added to catalog")
+            qm.setWindowTitle("Successful")
+            qm.setStandardButtons(qm.StandardButton.Ok)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
+            ret = qm.exec()
+
             if ret == qm.StandardButton.Ok:
                 self.initTab()
+
         else:
             if product_name == '':
                 self.invalid_product_name_label.setText('Invalid product name')
@@ -145,7 +165,11 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
 
     def __sign_out(self):
         qm = QtWidgets.QMessageBox()
-        ret = qm.question(self,'Confirmation', "Sign out?", qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setText(f"Sign out?")
+        qm.setWindowTitle("Confirmation")
+        qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+        qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+        ret = qm.exec()
 
         if ret == qm.StandardButton.Yes:
             self.app_widget.setFixedWidth(500)
@@ -347,10 +371,23 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
             return
         else:
             qm = QtWidgets.QMessageBox()
-            ret = qm.question(self,'Confirmation', f"Change status of order {order_id} to {state}?", qm.StandardButton.Yes | qm.StandardButton.No)
+            qm.setText(f"Change status of order {order_id} to {state}?")
+            qm.setWindowTitle("Confirmation")
+            qm.setStandardButtons(qm.StandardButton.Yes | qm.StandardButton.No)
+            qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_question.jpg"))
+            ret = qm.exec()
 
             if ret == qm.StandardButton.Yes:
                 query = QSqlQuery(f'exec UpdateOrderStatus {order_id}, {state}')
+                qm = QtWidgets.QMessageBox()
+                qm.setText(f"Status of order {order_id} updated to {state}")
+                qm.setWindowTitle("Successful")
+                qm.setStandardButtons(qm.StandardButton.Ok)
+                qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
+                ret = qm.exec()
+
+                if ret == qm.StandardButton.Ok:
+                    self.initTab()
             self.initTab()
                 
     def handle_show_details_button_clicked(self):
