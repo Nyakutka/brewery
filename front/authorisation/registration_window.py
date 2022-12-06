@@ -56,7 +56,9 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             qm.setWindowTitle("Successful")
             qm.setStandardButtons(qm.StandardButton.Ok)
             qm.setIconPixmap(QtGui.QPixmap("D:\учеба\бд\курсач\\brewery\\front\cadian_ok.jpg"))
+            qm.exec()
         else:
+            print(query.lastError().databaseText())
             if company_name == '':
                 self.invalid_company_name_label.setText('\u274c Empty field')
                 self.invalid_company_name_label.show()
@@ -72,10 +74,10 @@ class RegistrationWindow(QtWidgets.QMainWindow, Ui_RegistrationWindow):
             else:
                 self.invalid_email_label.setText('\u2713')
                 self.invalid_email_label.show()
-            if phone_number == '' or query.lastError().text().__contains__('CK_CUSTOMER_PHONE_NUMBER') or len(phone_number) != 11:
+            if phone_number == '' or query.lastError().databaseText().__contains__('CK_CUSTOMER_PHONE_NUMBER') or len(phone_number) != 11:
                 self.invalid_phone_number_label.setText('\u274c Incorrect number')
                 self.invalid_phone_number_label.show()
-            elif query.lastError().text().__contains__('UQ_CUSTOMER_PHONE_NUMBER'):
+            elif query.lastError().databaseText().__contains__('UQ_CUSTOMER_PHONE_NUMBER'):
                 self.invalid_phone_number_label.setText('\u274c This phone number is already used!')
                 self.invalid_phone_number_label.show()   
             else:

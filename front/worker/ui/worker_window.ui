@@ -30,7 +30,7 @@
      <string/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="catalog_tab">
      <attribute name="title">
@@ -472,7 +472,7 @@
        <rect>
         <x>770</x>
         <y>40</y>
-        <width>231</width>
+        <width>161</width>
         <height>31</height>
        </rect>
       </property>
@@ -677,6 +677,32 @@
       </property>
       <property name="text">
        <string>Products lack on stock</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="date_filter_comboBox">
+      <property name="geometry">
+       <rect>
+        <x>940</x>
+        <y>40</y>
+        <width>211</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="date_filter_label">
+      <property name="geometry">
+       <rect>
+        <x>940</x>
+        <y>20</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Filter by date:</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -907,8 +933,6 @@
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="../signboared.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

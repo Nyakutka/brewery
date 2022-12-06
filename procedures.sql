@@ -1,6 +1,7 @@
 use brewery
 go
 --PROCEDURES
+---Просмотр базы товаров
 create or alter procedure ShowProductsBase 
 as
 select product_name,
@@ -12,7 +13,7 @@ select product_name,
 		amount
 from ProductsStockView
 go
---
+---
 create or alter procedure ShowProductsCatalog 
 as
 select product_name,
@@ -84,6 +85,21 @@ from Orders
 		on orders.customer_id=customers.customer_id
 go
 --
+create or alter procedure ShowAllOrders_Period_ForWorker
+	@period int
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders 
+	join customers 
+		on orders.customer_id=customers.customer_id
+where DATEDIFF(day, order_date, GETDATE()) < @period
+go
+--
 create or alter procedure ShowOrdersByCustomer_name_ForWorker
 	@customer_name varchar(30)
 as
@@ -97,6 +113,22 @@ from Orders
 	join customers 
 		on orders.customer_id=customers.customer_id
 where customer_name = @customer_name
+go
+---
+create or alter procedure ShowOrdersByCustomer_nameAnd_Period_ForWorker
+	@customer_name varchar(30),
+	@period int
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where customer_name = @customer_name and DATEDIFF(day, order_date, GETDATE()) < @period
 go
 --
 create or alter procedure ShowOrdersByOrder_status_ForWorker
@@ -113,6 +145,22 @@ from Orders
 		on orders.customer_id=customers.customer_id
 where order_status = @order_status
 go
+---
+create or alter procedure ShowOrdersByOrder_statusAnd_Period_ForWorker
+	@order_status varchar(30),
+	@period int
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < @period
+go
 --
 create or alter procedure ShowOrdersByCustomer_nameAndOrder_status_ForWorker
 	@customer_name varchar(30),
@@ -128,6 +176,23 @@ from Orders
 	join customers 
 		on orders.customer_id=customers.customer_id
 where customer_name = @customer_name and order_status = @order_status
+go
+---
+create or alter procedure ShowOrdersByCustomer_nameAndOrder_statusAnd_Period_ForWorker
+	@customer_name varchar(30),
+	@order_status varchar(30),
+	@period int
+as
+select order_id, 
+	   customer_name, 
+	   order_date,
+	   order_status,
+	   total_prime_cost,
+	   total_cost 
+from Orders
+	join customers 
+		on orders.customer_id=customers.customer_id
+where customer_name = @customer_name and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < @period
 go
 --
 create or alter procedure ShowOrdersByCustomer_id_ForCustomer
@@ -153,79 +218,38 @@ from Orders
 where customer_id = @customer_id and order_status = @order_status
 go
 ---
-create or alter procedure ShowOrdersByCustomer_id_LastWeek_ForCustomer
-	@customer_id int
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost
-from Orders
-where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 7
-go
----
-create or alter procedure ShowOrdersByCustomer_id_LastMonth_ForCustomer
-	@customer_id int
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost
-from Orders
-where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 30
-go
----
-create or alter procedure ShowOrdersByCustomer_id_LastYear_ForCustomer
-	@customer_id int
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost
-from Orders
-where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < 365
-go
----
-create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastWeek_ForCustomer
+create or alter procedure ShowOrdersByCustomer_id_Period_ForCustomer
 	@customer_id int,
-	@order_status varchar(30)
+	@period int
 as
 select order_id,
 	order_date,
 	order_status, 
 	total_cost
 from Orders
-where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 7
+where customer_id = @customer_id and DATEDIFF(day, order_date, GETDATE()) < @period
 go
 ---
-create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastMonth_ForCustomer
+create or alter procedure ShowOrdersByCustomer_idAndOrder_status_Period_ForCustomer
 	@customer_id int,
-	@order_status varchar(30)
+	@order_status varchar(30),
+	@period int
 as
 select order_id,
 	order_date,
 	order_status, 
 	total_cost
 from Orders
-where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 30
-go
----
-create or alter procedure ShowOrdersByCustomer_idAndOrder_status_LastYear_ForCustomer
-	@customer_id int,
-	@order_status varchar(30)
-as
-select order_id,
-	order_date,
-	order_status, 
-	total_cost
-from Orders
-where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < 365
+where customer_id = @customer_id and order_status = @order_status and DATEDIFF(day, order_date, GETDATE()) < @period
 go
 ---
 create or alter procedure ShowOrderDetails
 @order_id int
 as
-select product_name, amount, price, cost
+select product_name,
+		amount, 
+		price, 
+		cost
 	from OrdersOrderDetailsCustomersView
 	where order_id = @order_id
 GO
@@ -335,13 +359,15 @@ create or alter procedure InsertCustomer
 	@address varchar(30),
 	@user_password varchar(30)
 as
-	BEGIN TRANSACTION
+	BEGIN TRANSACTION;
 		INSERT INTO users(username,
 				user_password,
 				user_role) 
 			VALUES (left(@email, charindex('@', @email) - 1),
 					HASHBYTES('SHA2_256', @user_password), 
 					'customer')
+		IF (@@error <> 0)
+        	ROLLBACK
 		INSERT INTO customers(user_id, 
 				email,
 				customer_name, 
@@ -354,9 +380,7 @@ as
 				@phone_number,
 				@address
 			)
-		IF (@@error <> 0)
-        	ROLLBACK
-	COMMIT
+	COMMIT TRANSACTION;
 GO
 
 create or alter procedure InsertOrder

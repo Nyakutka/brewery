@@ -196,24 +196,23 @@ class CustomerWindow(QtWidgets.QMainWindow, Ui_CustomerForm):
         self.details_table_widget.hide()
         self.hide_details_button.hide()
         self.orders_table_widget.setRowCount(0)
+        if self.date_filter_comboBox.currentText() == 'Last week':
+            period = 7
+        if self.date_filter_comboBox.currentText() == 'Last month':
+            period = 30
+        if self.date_filter_comboBox.currentText() == 'Last year':
+            period = 365
+
         if self.status_filter_comboBox.currentText() == 'all':
             if self.date_filter_comboBox.currentText() == 'all':
                 query = QSqlQuery(f'exec ShowOrdersByCustomer_id_ForCustomer {self.customer_id}')
-            elif self.date_filter_comboBox.currentText() == 'Last week':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastWeek_ForCustomer {self.customer_id}')
-            elif self.date_filter_comboBox.currentText() == 'Last month':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastMonth_ForCustomer {self.customer_id}')
-            elif self.date_filter_comboBox.currentText() == 'Last year':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_LastYear_ForCustomer {self.customer_id}')
+            else:
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_id_Period_ForCustomer {self.customer_id}, {period}')
         else:
             if self.date_filter_comboBox.currentText() == 'all':
                 query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_ForCustomer {self.customer_id}, {self.status_filter_comboBox.currentText()}')
-            elif self.date_filter_comboBox.currentText() == 'Last week':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastWeek_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
-            elif self.date_filter_comboBox.currentText() == 'Last month':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastMonth_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
-            elif self.date_filter_comboBox.currentText() == 'Last year':
-                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_LastYear_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}"')
+            else:
+                query = QSqlQuery(f'exec ShowOrdersByCustomer_idAndOrder_status_Period_ForCustomer {self.customer_id}, "{self.status_filter_comboBox.currentText()}", {period}')
 
         while query.next():
             rows = self.orders_table_widget.rowCount()

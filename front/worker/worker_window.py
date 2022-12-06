@@ -15,6 +15,7 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
         self.worker_tab_widget.currentChanged.connect(self.initTab)
         self.status_filter_comboBox.currentTextChanged.connect(self.initTab)
         self.customer_filter_comboBox.currentTextChanged.connect(self.initTab)
+        self.date_filter_comboBox.currentTextChanged.connect(self.initTab)
         self.all_customer_filter_comboBox.currentTextChanged.connect(self.initTab)
         self.total_income_filter_comboBox.currentTextChanged.connect(self.initTab)
         self.sign_out_button.clicked.connect(self.__sign_out)
@@ -328,20 +329,41 @@ class WorkerWindow(QtWidgets.QMainWindow, Ui_WorkerWindow):
                 customer_names.append(customer_names_query.value(0))
             self.customer_filter_comboBox.addItems(customer_names)
 
+        if self.date_filter_comboBox.count() == 0:
+            self.date_filter_comboBox.addItems(['all', 'Last week', 'Last month', 'Last year'])
         self.order_number_label.hide()
         self.details_table_widget.hide()
         self.hide_details_button.hide()
         self.lack_label.hide()
         self.lack_table_widget.hide()
         self.orders_table_widget.setRowCount(0)
-        if (self.status_filter_comboBox.currentText() == 'all' and self.customer_filter_comboBox.currentText() == 'all'):
+        
+        status_filter = self.status_filter_comboBox.currentText()
+        customer_filter = self.customer_filter_comboBox.currentText()
+        date_filter = self.date_filter_comboBox.currentText()
+        if date_filter == 'Last week':
+            period = 7
+        if date_filter == 'Last month':
+            period = 30
+        if date_filter == 'Last year':
+            period = 365
+
+        if status_filter == 'all' and customer_filter == 'all' and date_filter == 'all':
             query = QSqlQuery(f'exec ShowAllOrders')
-        elif (self.status_filter_comboBox.currentText() == 'all'):
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_name_ForWorker "{self.customer_filter_comboBox.currentText()}"')
-        elif (self.customer_filter_comboBox.currentText() == 'all'):
-            query = QSqlQuery(f'exec ShowOrdersByOrder_status_ForWorker {self.status_filter_comboBox.currentText()}')
+        elif status_filter == 'all' and date_filter == 'all':
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_name_ForWorker "{customer_filter}"')
+        elif customer_filter == 'all' and date_filter == 'all':
+            query = QSqlQuery(f'exec ShowOrdersByOrder_status_ForWorker {status_filter}')
+        elif status_filter == 'all' and customer_filter == 'all':
+            query = QSqlQuery(f'exec ShowAllOrders_Period_ForWorker {period}')
+        elif status_filter == 'all':
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_nameAnd_Period_ForWorker "{customer_filter}", {period}')
+        elif customer_filter == 'all':
+            query = QSqlQuery(f'exec ShowOrdersByOrder_statusAnd_Period_ForWorker "{status_filter}", {period}')
+        elif date_filter == 'all':
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_nameAndOrder_status_ForWorker "{customer_filter}", {status_filter}')
         else:
-            query = QSqlQuery(f'exec ShowOrdersByCustomer_nameAndOrder_status_ForWorker "{self.customer_filter_comboBox.currentText()}", {self.status_filter_comboBox.currentText()}')
+            query = QSqlQuery(f'exec ShowOrdersByCustomer_nameAndOrder_statusAnd_Period_ForWorker "{customer_filter}", {status_filter}, {period}')
 
         while query.next():
             rows = self.orders_table_widget.rowCount()

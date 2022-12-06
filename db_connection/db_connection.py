@@ -1,4 +1,4 @@
-from PyQt6.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
+from PyQt6.QtSql import QSqlDatabase
 
 SERVER = 'localhost'
 # SERVER = 'NYAKUTKA'

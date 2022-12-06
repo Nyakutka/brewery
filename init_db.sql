@@ -36,7 +36,7 @@ GO
 IF OBJECT_ID(N'dbo.users', N'U') IS NULL 
     CREATE TABLE users (
         [user_id] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-        [username] [varchar](30) NOT NULL CHECK(username !=''),
+        [username] [varchar](30) NOT NULL CHECK(username !='') UNIQUE,
         [user_password] varbinary(256) NOT NULL 
             CONSTRAINT CK_USER_PASSWORD CHECK(user_password !=''),
         [user_role] [varchar](10) NOT NULL
@@ -92,7 +92,7 @@ IF OBJECT_ID(N'dbo.products', N'U') IS NULL
             CONSTRAINT CK_PRODUCT_UPC CHECK(LEN(upc_code) = 12),
         [prime_price] [decimal](8, 2) NOT NULL,
         [retail_price] as prime_price * 1.38,
-        [discount_price] [decimal](8, 2) NULL
+        [discount_price] [decimal](8, 2)
     );
 GO
 
@@ -190,7 +190,7 @@ create view ProductsStockView as
 GO
 
 create view OrdersOrderDetailsCustomersView as
-select orders.order_id,
+    select orders.order_id,
 	   customer_name,
 	   order_date,
 	   orders.order_status,
